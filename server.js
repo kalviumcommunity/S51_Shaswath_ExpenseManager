@@ -7,6 +7,12 @@ app.get("/", (req, res) => {
     res.send(htmlResponse);
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
 if (require.main === module) {
     app.listen(port, () => {
         console.log(`Server running`);
