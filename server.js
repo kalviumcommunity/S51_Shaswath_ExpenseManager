@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const { Connect, isConnected } = require("./db");
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const {signUpRouter} = require('./routes/routes')
+
 
 const app = express();
 app.use(cors());
@@ -23,15 +25,20 @@ Connect()
         process.exit(1); 
     });
 
+// Routes
+app.use("/", signUpRouter)
+
+
+// Home Route
 app.get("/", (req, res) => {
-  const htmlResponse = `<h1><i>Expense Manager</i></h1><p>Database Connection Status: ${isConnected ? 'Connected' : 'Disconnected'}</p>`;
-  res.send(htmlResponse);
+    const htmlResponse = `<h1><i>Expense Manager</i></h1><p>Database Connection Status: ${isConnected ? 'Connected' : 'Disconnected'}</p>`;
+    res.send(htmlResponse);
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
 });
 
 
