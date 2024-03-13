@@ -31,10 +31,10 @@ signUpRouter.post("/signup",async (req, res) =>{
 LoginRouter.post('/login',async (req, res) => {
     try{
         const {username, password} = req.body
-        if(!email || !password){
+        if(!username || !password){
             return res.status(400).json({Message: "Please enter all fields"})
         }
-        let user = await User.findOne({email})
+        let user = await User.findOne({username})
         if(!user){
             return res.status(400).json({Message: "User not found"})
         }
