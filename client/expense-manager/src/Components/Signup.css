@@ -1,0 +1,73 @@
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.signup-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 3px solid black;
+    border-radius: 5px;
+    background-color: white;
+    transition: transform 0.3s ease;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: black;
+}
+
+.inputText,
+.inputpassword {
+    width: 70%;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
+
+.inputText:focus,
+.inputpassword:focus {
+    outline: none;
+    border-color: #ccc;
+}
+
+.button-submit {
+    display: block;
+    width: 40%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-submit:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: opacity 0.3s ease;
+}
+
+.error-message.show {
+    opacity: 1;
+}
+
+.error-message.hide {
+    opacity: 0;
+}
