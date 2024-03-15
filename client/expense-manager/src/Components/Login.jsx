@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css'; 
+import './Login.css';
+
+function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const spans = [];
     const navigate = useNavigate();
 
     const handleUsernameChange = (e) => {
@@ -42,8 +47,19 @@ function Login() {
             setError('Something went wrong. Please try again later.');
         }
     };
+    for (let i = 0; i < 15; i++) {
+        const randomNumber = getRandomNumber(15, 50); 
+        spans.push(<span key={i} style={{ '--i': randomNumber }}></span>);
+    }
 
     return (
+        <>
+        <div className='bubbles'>
+            {spans}
+        </div>
+        <div className='bubble'>
+            {spans}
+        </div>
         <div className="login-container">
             <h2 className='h2'>Login</h2>
             {error && <p className="error-message">{error}</p>}
@@ -60,6 +76,7 @@ function Login() {
             </form>
             <span>If you are new user please </span><Link to="/signup">SIGN UP</Link>
         </div>
+        </>
     );
 }
 
