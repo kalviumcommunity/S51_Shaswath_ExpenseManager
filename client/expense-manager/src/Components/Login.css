@@ -78,39 +78,3 @@
     text-align: center;
     position: relative;
 }
-
-
-body{
-    overflow: hidden;
-  }
-  
-  .bubbles{
-    position: relative;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .bubble{
-    position: relative;
-    display: flex;
-    justify-content: flex-start;
-  }
-  
-  .bubbles span, .bubble span{
-    position: relative;
-    width: 30px;
-    height: 30px;
-    background-color: aqua;
-    margin: 0 4px;
-    border-radius: 50%;
-    animation: animate 5s linear infinite;
-    animation-duration: calc(150s / var(--i));
-  }
-  @keyframes animate {
-    0% {
-      transform: translateY(100vh) scale(0);
-    }
-    100% {
-      transform: translateY(0) scale(1);
-    }
-  }
