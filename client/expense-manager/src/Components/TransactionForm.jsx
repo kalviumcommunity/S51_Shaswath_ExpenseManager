@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import './TransactionForm.css'
+import axios from 'axios';
+import './TransactionForm.css';
 
-const TransactionForm = () => {
+const TransactionForm = ({onClose}) => {
   const [formData, setFormData] = useState({
     title: '',
     date: '',
@@ -10,6 +11,19 @@ const TransactionForm = () => {
     description: '',
     mode: '',
   });
+  const [error, setError] = useState('');
+
+  // Function to get cookie by name
+  const getCookie = (name) => {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName.trim() === name) {
+        return decodeURIComponent(cookieValue);
+      }
+    }
+    return null;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,14 +33,39 @@ const TransactionForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission, e.g., send data to backend
-    console.log(formData);
+    try {
+      const token = getCookie('token'); // Get token from cookies
+      let userId = getCookie("id")
+      console.log(userId)
+      formData.user = userId
+      const response = await axios.post('https://expensemanager-2t8j.onrender.com/add', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('Transaction added successfully:', response.data.transaction);
+      setFormData({
+        title: '',
+        date: '',
+        amount: '',
+        category: '',
+        description: '',
+        mode: '',
+      });
+      setError('');
+      alert('Transaction added successfully');
+      onClose()
+    } catch (error) {
+      console.error('Error submitting transaction:', error);
+      setError('Something went wrong. Please try again later.');
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="transaction-form">
       <label className="label-t">Title:</label>
       <input type="text" name="title" value={formData.title} onChange={handleChange} className="inputText-t" />
 
@@ -45,7 +84,8 @@ const TransactionForm = () => {
       <label className="label-t">Mode:</label>
       <input type="text" name="mode" value={formData.mode} onChange={handleChange} className="inputText-t" />
 
-      <button type="submit" className='submit'>Submit</button>
+      <button type="submit" className="submit">Submit</button>
+      {error && <p className="error-message">{error}</p>}
     </form>
   );
 };
