@@ -33,6 +33,7 @@ function Login() {
                 const { token } = response.data;
                 console.log(response.data);
                 document.cookie = `token=${token}; path=/;`;
+                document.cookie = `id=${response.data.user._id}`
                 navigate('/');
             } else {
                 const errorData = response.data;
