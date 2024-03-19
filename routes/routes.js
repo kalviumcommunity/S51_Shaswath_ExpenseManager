@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('../models/user.model')
+const Transaction = require('../models/transaction.model')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
@@ -8,6 +9,7 @@ const jwt = require('jsonwebtoken')
 const signUpRouter = express.Router()
 const LoginRouter = express.Router()
 const LogoutRouter = express.Router()
+const transactionRouter = express.Router()
 
 
 // SignUP route
@@ -51,11 +53,13 @@ LoginRouter.post('/login', async (req, res) => {
         const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY);
         
         // Store token in cookie
+        console.log(user)
         res.cookie('token', token, { httpOnly: true});
         console.log("token", token, user.username)
         return res.status(200).json({
             message: `Welcome back, ${user.username}`,
             user,
+            token
         });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
@@ -67,4 +71,51 @@ LogoutRouter.get("/logout", (req, res)=>{
     res.send('Logout successful');
 });
 
-module.exports = {signUpRouter, LoginRouter, LogoutRouter}
+
+
+
+function authenticateToken(req, res, next) {
+    let token = req.headers['authorization'];
+    if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+    token = token.slice(7); 
+    console.log(token)
+
+    jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Forbidden' });
+        req.user = user;
+        next();
+    });
+}
+
+
+// Add Transaction route
+transactionRouter.post("/add", authenticateToken ,  async (req, res) => {
+    try {
+        const { title, date, amount, category, description, mode, user } = req.body;
+
+        // Validate request body
+        if (!title || !date || !amount || !category || !description || !mode) {
+            return res.status(400).json({ message: "Please provide all required fields" });
+        }
+        
+        // Create new transaction with user ID
+        const newTransaction = await Transaction.create({
+            title,
+            date,
+            amount,
+            category,
+            description,
+            mode,
+            user
+        });
+
+        return res.status(200).json({ message: "Transaction added successfully", transaction: newTransaction });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+
+
+module.exports = {signUpRouter, LoginRouter, LogoutRouter, transactionRouter}
