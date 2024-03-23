@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { Connect, isConnected } = require("./db");
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const {signUpRouter, LoginRouter, LogoutRouter, transactionRouter} = require('./routes/routes')
+const {signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction} = require('./routes/routes')
 const cookieParser = require('cookie-parser')
 
 
@@ -13,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
+
 
 // Connect to MongoDB
 Connect()
@@ -32,6 +33,7 @@ app.use("/", signUpRouter)
 app.use("/", LoginRouter)
 app.use("/", LogoutRouter)
 app.use("/", transactionRouter)
+app.use("/", getTransaction)
 
 
 // Home Route

@@ -10,6 +10,7 @@ const signUpRouter = express.Router()
 const LoginRouter = express.Router()
 const LogoutRouter = express.Router()
 const transactionRouter = express.Router()
+const getTransaction = express.Router()
 
 
 // SignUP route
@@ -118,4 +119,17 @@ transactionRouter.post("/add", authenticateToken ,  async (req, res) => {
 
 
 
-module.exports = {signUpRouter, LoginRouter, LogoutRouter, transactionRouter}
+
+// Getting transactions
+getTransaction.get("/get", async (req, res) => {
+    try {
+        const transactions = await Transaction.find();
+        res.status(200).json(transactions);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+
+module.exports = {signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction}
