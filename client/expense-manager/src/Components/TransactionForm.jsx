@@ -58,6 +58,7 @@ const TransactionForm = ({onClose}) => {
       setError('');
       alert('Transaction added successfully');
       onClose()
+      window.location.reload()
     } catch (error) {
       console.error('Error submitting transaction:', error);
       setError('Something went wrong. Please try again later.');
@@ -85,6 +86,7 @@ const TransactionForm = ({onClose}) => {
       <input type="text" name="mode" value={formData.mode} onChange={handleChange} className="inputText-t" />
 
       <button type="submit" className="submit">Submit</button>
+      <button className='submit' onClick={onClose}>Close</button>
       {error && <p className="error-message">{error}</p>}
     </form>
   );
