@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Signup.css'; 
+
 
 
 
@@ -47,34 +47,37 @@ function Signup() {
             setError('Something went wrong. Please try again later.');
         }
     };
-    
+
 
 
     return (
         <>
-        <div className="signup-container">
-            <h2>Sign Up</h2>
-            {error && <p className="error-message">{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="name" className='label'>Name:</label>
-                    <input type="text" className='inputText'  id="name" value={name} onChange={handleNameChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="username" className='label'>Username:</label>
-                    <input type="text" className='inputText' id="username" value={username} onChange={handleUsernameChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="email" className='label'>Email:</label>
-                    <input type="email" className='inputText' id="email" value={email} onChange={handleEmailChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password" className='label'>Password:</label>
-                    <input type="password" className='inputText' id="password" value={password} onChange={handlePasswordChange} required />
-                </div>
-                <button className="button-submit" type="submit">Sign Up</button>
-            </form>
-        </div>
+            <div>
+                {error && <p className="error-message">{error}</p>}
+                <form onSubmit={handleSubmit}>
+                    <h1>Sign Up</h1>
+                    <label htmlFor="name" >
+                        <input type="text"  id="name" value={name} onChange={handleNameChange} required placeholder="Name" />
+                        <span>Name</span>
+                    </label>
+                    <label htmlFor="username" >
+                        <input type="text"  id="username" value={username} onChange={handleUsernameChange} placeholder="Username" required />
+                        <span>Username</span>
+                    </label>
+
+                    <label htmlFor="email" >
+                        <input type="email"  id="email" value={email} onChange={handleEmailChange} required placeholder="Email" />
+                        <span>Email</span>
+                    </label>
+
+                    <label htmlFor="password" >
+                        <input type="password"  id="password" value={password} onChange={handlePasswordChange} required placeholder="Password" />
+                        <span>Password</span>
+                    </label>
+
+                    <button className="button-submit" id='button' type="submit">Sign Up</button>
+                </form>
+            </div>
         </>
     );
 }

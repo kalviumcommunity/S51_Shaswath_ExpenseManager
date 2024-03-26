@@ -54,6 +54,7 @@ export default function Main() {
                     <PieChartIcon fontSize='large' className='icon' />
                 </div>
             </div>
+            <br/>
             {showForm && <TransactionForm onClose={handleCloseForm} />}
             {!showForm && <div className='ttables'>
                 <h2>Transactions</h2>

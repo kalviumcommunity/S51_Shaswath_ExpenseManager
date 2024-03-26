@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css';
-
+import { useNavigate, Link } from 'react-router-dom';
 
 
 function Login() {
@@ -22,22 +20,17 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const header = new Headers({"Access-Control-Allow-Origin":"*", 'Content-Type' : '*'})
-            const response = await axios.post('https://expensemanager-2t8j.onrender.com/login',{
-                headers: header,
-                'mode' : "no-cors",
+            const response = await axios.post('https://expensemanager-2t8j.onrender.com/login', {
                 username,
                 password
             });
             if (response.status === 200) {
                 const { token } = response.data;
-                console.log(response.data);
                 document.cookie = `token=${token}; path=/;`;
-                document.cookie = `id=${response.data.user._id}`
+                document.cookie = `id=${response.data.user._id}`;
                 navigate('/');
             } else {
                 const errorData = response.data;
-                navigate('/');
                 setError(errorData.error);
             }
         } catch (error) {
@@ -47,24 +40,23 @@ function Login() {
     };
 
     return (
-        <>
-        <div className="login-container">
-            <h2 className='h2'>Login</h2>
-            {error && <p className="error-message">{error}</p>}
+        <div className="register">
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label className='label' htmlFor="username">Username:</label>
-                    <input type="text" className='inputText' id="username" value={username} onChange={handleUsernameChange} required />
-                </div>
-                <div className="form-group">
-                    <label className='label' htmlFor="password">Password:</label>
-                    <input type="password" id="password" className='inputpassword' value={password} onChange={handlePasswordChange} required />
-                </div>
-                <button className='buttonsubmit' type="submit">Login</button>
+            <h1>LOGIN</h1>
+                <label htmlFor="username">
+                    <input type="text" id="username" value={username} onChange={handleUsernameChange} placeholder="Username" />
+                    <span>Username</span>
+                </label>
+                <label htmlFor="password">
+                    <input type="password" id="password" value={password} onChange={handlePasswordChange} placeholder="Password" />
+                    <span>Password</span>
+                </label>
+                {error && <p className="error-message">{error}</p>}
+                <button type="submit" id='button'>Login</button>
+                <p>If you are a new user, please <Link to="/signup" id="new">SIGN UP</Link></p>
             </form>
-            <span>If you are new user please </span><Link to="/signup">SIGN UP</Link>
+            
         </div>
-        </>
     );
 }
 
