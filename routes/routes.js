@@ -11,27 +11,30 @@ const LoginRouter = express.Router()
 const LogoutRouter = express.Router()
 const transactionRouter = express.Router()
 const getTransaction = express.Router()
+const editTransaction = express.Router()
+const geteachTransaction = express.Router()
+const deleteTransaction = express.Router()
 
 
 // SignUP route
-signUpRouter.post("/signup",async (req, res) =>{
-    try{
-        const {name, username, email, password} = req.body
-        if(!name || !username || !email || !password){
-            return res.status(400).json({Message: "Please enter all fields"})
+signUpRouter.post("/signup", async (req, res) => {
+    try {
+        const { name, username, email, password } = req.body
+        if (!name || !username || !email || !password) {
+            return res.status(400).json({ Message: "Please enter all fields" })
         }
-        let user = await User.findOne({email})
+        let user = await User.findOne({ email })
 
-        if(user){
-            return res.status(400).json({Message: "User already exists"})
+        if (user) {
+            return res.status(400).json({ Message: "User already exists" })
         }
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
 
-        let newUser = await User.create({name, username, email, password: hashedPassword})
-        return res.status(200).json({User: newUser})
-    } catch(err){
-        return res.status(500).json({success: false, message: err.message,});
+        let newUser = await User.create({ name, username, email, password: hashedPassword })
+        return res.status(200).json({ User: newUser })
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message, });
     }
 })
 
@@ -52,10 +55,10 @@ LoginRouter.post('/login', async (req, res) => {
         }
         // Create JWT token
         const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY);
-        
+
         // Store token in cookie
         console.log(user)
-        res.cookie('token', token, { httpOnly: true});
+        res.cookie('token', token, { httpOnly: true });
         console.log("token", token, user.username)
         return res.status(200).json({
             message: `Welcome back, ${user.username}`,
@@ -67,7 +70,8 @@ LoginRouter.post('/login', async (req, res) => {
     }
 })
 
-LogoutRouter.get("/logout", (req, res)=>{
+// Logout Router
+LogoutRouter.get("/logout", (req, res) => {
     res.clearCookie('token');
     res.send('Logout successful');
 });
@@ -79,7 +83,7 @@ function authenticateToken(req, res, next) {
     let token = req.headers['authorization'];
     if (!token) return res.status(401).json({ message: 'Unauthorized' });
 
-    token = token.slice(7); 
+    token = token.slice(7);
     console.log(token)
 
     jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
@@ -91,7 +95,7 @@ function authenticateToken(req, res, next) {
 
 
 // Add Transaction route
-transactionRouter.post("/add", authenticateToken ,  async (req, res) => {
+transactionRouter.post("/add", authenticateToken, async (req, res) => {
     try {
         const { title, date, amount, category, description, mode, user } = req.body;
 
@@ -99,7 +103,7 @@ transactionRouter.post("/add", authenticateToken ,  async (req, res) => {
         if (!title || !date || !amount || !category || !description || !mode) {
             return res.status(400).json({ message: "Please provide all required fields" });
         }
-        
+
         // Create new transaction with user ID
         const newTransaction = await Transaction.create({
             title,
@@ -130,6 +134,53 @@ getTransaction.get("/get", async (req, res) => {
     }
 });
 
+// Editing transactions
+editTransaction.patch("/patch/:id", async (req, res) => {
+    try {
+        const { id } = req.params
+        const updated = req.body
+        const updatedTransaction = await Transaction.findOneAndUpdate({ _id: id }, updated, { new: true });
+        if (!updatedTransaction) {
+            return res.status(404).json({ error: 'Transaction not found' });
+        }
+        res.status(200).json(updatedTransaction);
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ error: "Internal server error" })
+    }
+})
+
+// Getting each transaction
+geteachTransaction.get('/get/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const transaction = await Transaction.findOne({ _id: id });
+        if (!transaction) {
+            return res.status(404).json({ error: 'transaction not found' });
+        }
+        res.status(200).json(transaction);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+});
+
+// Deleting a transaction
+deleteTransaction.delete('/delete/:id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const deleteTransaction = await Transaction.findOneAndDelete({ _id: id })
+        if (!deleteTransaction) {
+            return res.status(404).json({ error: 'Transaction not found' });
+        }
+        res.status(200).json(deleteTransaction);
+    } catch(err){
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
 
 
-module.exports = {signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction}
+})
+
+
+module.exports = { signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction }

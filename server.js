@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { Connect, isConnected } = require("./db");
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const {signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction} = require('./routes/routes')
+const {signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction} = require('./routes/routes')
 const cookieParser = require('cookie-parser')
 
 
@@ -34,6 +34,10 @@ app.use("/", LoginRouter)
 app.use("/", LogoutRouter)
 app.use("/", transactionRouter)
 app.use("/", getTransaction)
+app.use("/", editTransaction)
+app.use("/", geteachTransaction)
+app.use("/", deleteTransaction)
+
 
 
 // Home Route
