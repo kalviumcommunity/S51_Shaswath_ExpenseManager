@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import TransactionForm from './TransactionForm';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import "./Main.css"
+import {Link} from "react-router-dom"
 
 export default function Main() {
     const [showForm, setShowForm] = useState(false);
@@ -54,7 +57,7 @@ export default function Main() {
                     <PieChartIcon fontSize='large' className='icon' />
                 </div>
             </div>
-            <br/>
+            <br />
             {showForm && <TransactionForm onClose={handleCloseForm} />}
             {!showForm && <div className='ttables'>
                 <h2>Transactions</h2>
@@ -68,7 +71,7 @@ export default function Main() {
                                 <th>Category</th>
                                 <th>Description</th>
                                 <th>Mode</th>
-                                {/* <th>User</th> */}
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,7 +84,11 @@ export default function Main() {
                                         <td>{transaction.category}</td>
                                         <td>{transaction.description}</td>
                                         <td>{transaction.mode}</td>
-                                        {/* <td>{transaction.user}</td> */}
+                                        <td id='actions'>
+                                            <Link className='link' to='/edit'><EditIcon className="action-button" /></Link>
+                                            <DeleteIcon className="action-button"/>
+                                        </td>
+
                                     </tr>
                                 ) : null
                             ))}
