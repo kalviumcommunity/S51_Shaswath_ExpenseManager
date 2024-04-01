@@ -57,10 +57,10 @@ export default function Edit() {
             } else {
                 console.error('Update failed:', response.data.error);
             }
-            navigate('/')
 
-        } catch (err) {
-            console.log(err)
+        } catch (error) {
+            console.error("Error fetching transaction data:", error);
+            setError("Error fetching transaction data. Please try again.");
         }
     };
     const close = () => {
