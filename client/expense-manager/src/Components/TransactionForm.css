@@ -88,7 +88,13 @@ select:not(:placeholder-shown) + span {
     transform: translateY(0px);
 }
 
+
+
 #new{
     color: inherit;
     
+}
+
+input{
+    color-scheme:dark ;
 }
