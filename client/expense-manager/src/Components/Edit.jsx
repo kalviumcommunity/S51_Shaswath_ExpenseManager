@@ -1,29 +1,71 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
-export default function Edit({ onClose }) {
+
+export default function Edit() {
+    const {id} = useParams()
+
     const [title, setTitle] = useState('');
     const [date, setDate] = useState('');
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [mode, setMode] = useState('');
-    const [error, setError] = useState('');
+    const [error, setError] = useState(''); 
+    
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    useEffect(()=>{
+        const fetchTransactionData = async () => {
+            try{
+                const response = await axios.get(`https://expensemanager-2t8j.onrender.com/get/${id}`);
+                if(response.status === 200){
+                    const data = response.data
+
+                    setTitle(data.title);
+                    setDate(data.date);
+                    setAmount(data.amount);
+                    setCategory(data.category);
+                    setDescription(data.description);
+                    setMode(data.mode);
+                }
+                else{
+                    console.log("Failed to fetch data")
+                }
+            } catch(err){
+                console.log("Error", err)
+            }
+        }
+        fetchTransactionData()
+    },[id])
+
+    const handleSubmit = async (e) => {
         try {
             e.preventDefault();
-            // Your form submission logic goes here
-            const formData = { title, date, amount, category, description, mode };
-            console.log(formData);
+            const response = await axios.patch(`https://expensemanager-2t8j.onrender.com/patch/${id}`, {
+                title: title,
+                date: date,
+                amount: amount,
+                category: category,
+                description: description,
+                mode: mode
+            })
+            if (response.status === 200) {
+                console.log('Updated Transaction:', response.data);
+                navigate('/');
+            } else {
+                console.error('Update failed:', response.data.error);
+            }
             navigate('/')
 
         } catch (err) {
             console.log(err)
         }
-
     };
+    const close = () => {
+        navigate('/')
+    }
 
     return (
         <div className="register">
@@ -112,10 +154,10 @@ export default function Edit({ onClose }) {
                     </select>
                     <span>Type</span>
                 </label>
-                <button type="submit" className="button">
+                <button type="submit" id="button">
                     Submit
                 </button>
-                <button type="button" className="button" onClick={onClose}>
+                <button type="button" id="button" onClick={close}>
                     Close
                 </button>
                 {error && <p className="error-message">{error}</p>}

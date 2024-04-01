@@ -5,7 +5,8 @@ import TransactionForm from './TransactionForm';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import "./Main.css"
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
+import axios from 'axios';
 
 export default function Main() {
     const [showForm, setShowForm] = useState(false);
@@ -48,6 +49,23 @@ export default function Main() {
         setShowForm(false);
     };
 
+    const handleDelete = async (id) => {
+        try {
+            const confirmed = window.confirm("Are you sure you want to delete this transaction?");
+            if (confirmed) {
+                const response = await axios.delete(`https://expensemanager-2t8j.onrender.com/delete/${id}`);
+                if (response.status === 200) {
+                    setData(data.filter(transaction => transaction._id !== id));
+                    console.log("Transaction deleted successfully");
+                } else {
+                    console.log("Failed to delete transaction");
+                }
+            }
+        } catch (error) {
+            console.error("Error deleting transaction:", error);
+        }
+    };
+
     return (
         <>
             <div className='mainn'>
@@ -79,16 +97,15 @@ export default function Main() {
                                 transaction.user === userId ? (
                                     <tr key={transaction._id}>
                                         <td>{transaction.title}</td>
-                                        <td>{transaction.date.slice(0, 10)}</td>
+                                        <td>{new Date(transaction.date).toLocaleDateString()}</td>
                                         <td>{transaction.amount}</td>
                                         <td>{transaction.category}</td>
                                         <td>{transaction.description}</td>
                                         <td>{transaction.mode}</td>
                                         <td id='actions'>
-                                            <Link className='link' to='/edit'><EditIcon className="action-button" /></Link>
-                                            <DeleteIcon className="action-button"/>
+                                            <Link className='link' to={`/edit/${transaction._id}`}><EditIcon className="action-button" /></Link>
+                                            <DeleteIcon className="action-button" onClick={() => handleDelete(transaction._id)} />
                                         </td>
-
                                     </tr>
                                 ) : null
                             ))}
