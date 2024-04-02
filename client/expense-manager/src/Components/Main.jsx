@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PieChartIcon from '@mui/icons-material/PieChart';
-import TransactionForm from './TransactionForm';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import "./Main.css"
-import { Link } from "react-router-dom"
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
+import "./Main.css";
+import TransactionForm from './TransactionForm';
 
 export default function Main() {
     const [showForm, setShowForm] = useState(false);
     const [data, setData] = useState([]);
     const [userId, setUserId] = useState('');
+    const [viewMode, setViewMode] = useState('list');
 
     useEffect(() => {
         fetchTransaction();
@@ -66,13 +67,25 @@ export default function Main() {
         }
     };
 
+    const toggleViewMode = () => {
+        setViewMode(prevMode => prevMode === 'list' ? 'pie' : 'list');
+    };
+
     return (
         <>
             <div className='mainn'>
                 <button className='login' onClick={handleAddNewTransaction}>Add New Transaction</button>
+                <Link to={`/overview/${userId}`}>
+                    <button className='login'>Overview</button>
+                </Link>
+
+
                 <div className='iconDiv'>
-                    <FormatListBulletedIcon fontSize='large' className='icon' />
-                    <PieChartIcon fontSize='large' className='icon' />
+                    {viewMode === 'list' ? (
+                        <PieChartIcon fontSize='large' className='icon' onClick={toggleViewMode} />
+                    ) : (
+                        <FormatListBulletedIcon fontSize='large' className='icon' onClick={toggleViewMode} />
+                    )}
                 </div>
             </div>
             <br />
