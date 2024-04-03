@@ -56,7 +56,7 @@ input:not(:placeholder-shown) + span{
     transform:translateY(0px);
 }
 
-select {
+.select {
     border: 3px solid red;
     color: #0ef;
     width: 100%;
@@ -68,12 +68,12 @@ select {
     appearance: none;
 }
 
-select option{
+.select option{
     background-color: black;
 }
 
 /* Animation for select */
-select + span {
+.select + span {
     position: absolute;
     top: 0;
     left: 0;
@@ -83,7 +83,7 @@ select + span {
 }
 
 label:focus-within > span,
-select:not(:placeholder-shown) + span {
+.select:not(:placeholder-shown) + span {
     color: white;
     transform: translateY(0px);
 }
