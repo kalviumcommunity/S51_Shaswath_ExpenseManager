@@ -79,7 +79,7 @@ const TransactionForm = ({ onClose }) => {
           <span>Amount</span>
         </label>
         <label htmlFor="category">
-          <select id="category" name="category" value={formData.category} required onChange={handleChange}>
+          <select className='select' id="category" name="category" value={formData.category} required onChange={handleChange}>
             <option value="">Select category</option>
             <option value="Food">Food</option>
             <option value="Transportation">Transportation</option>
@@ -100,7 +100,7 @@ const TransactionForm = ({ onClose }) => {
           <span>Description</span>
         </label>
         <label htmlFor="mode">
-          <select id="mode" name="mode" value={formData.mode} required onChange={handleChange}>
+          <select className='select' id="mode" name="mode" value={formData.mode} required onChange={handleChange}>
             <option value="">Select type</option>
             <option value="Credit">Credit</option>
             <option value="Debit">Debit</option>

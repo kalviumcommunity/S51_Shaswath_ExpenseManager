@@ -107,6 +107,7 @@ export default function Edit() {
                 </label>
                 <label htmlFor="category">
                     <select
+                        className='select'
                         id="category"
                         name="category"
                         value={category}
@@ -142,6 +143,7 @@ export default function Edit() {
                 </label>
                 <label htmlFor="mode">
                     <select
+                        className='select'
                         id="mode"
                         name="mode"
                         value={mode}

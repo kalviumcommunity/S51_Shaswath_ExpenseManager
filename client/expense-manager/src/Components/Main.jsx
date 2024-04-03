@@ -8,17 +8,32 @@ import { Link } from "react-router-dom";
 import "./Main.css";
 import TransactionForm from './TransactionForm';
 
+
 export default function Main() {
     const [showForm, setShowForm] = useState(false);
     const [data, setData] = useState([]);
     const [userId, setUserId] = useState('');
     const [viewMode, setViewMode] = useState('list');
+    const [filter, setFilter] = useState([])
+    const [selectedCreator, setSelectedCreator] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+
 
     useEffect(() => {
         fetchTransaction();
         const userId = getCookie("id");
         setUserId(userId);
     }, []);
+
+    useEffect(() => {
+        extractUniqueCreators()
+    }, [data])
+
+    const handleCreatorChange = (e) => {
+        setSelectedCreator(e.target.value);
+    };
 
     const getCookie = (name) => {
         const cookies = document.cookie.split(';');
@@ -30,6 +45,15 @@ export default function Main() {
         }
         return null;
     };
+
+    const handleStartDateChange = (e) => {
+        setStartDate(e.target.value);
+    };
+
+    const handleEndDateChange = (e) => {
+        setEndDate(e.target.value);
+    };
+
 
     const fetchTransaction = async () => {
         try {
@@ -71,6 +95,28 @@ export default function Main() {
         setViewMode(prevMode => prevMode === 'list' ? 'pie' : 'list');
     };
 
+    const extractUniqueCreators = () => {
+        const filter = [...new Set(data.map(item => item.mode))];
+        setFilter(filter);
+    };
+
+    const filterByDateRange = (transactions) => {
+        if (!startDate || !endDate) {
+            return transactions; // No date range selected, return all transactions
+        }
+
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        return transactions.filter(transaction => {
+            const transactionDate = new Date(transaction.date);
+            return transactionDate >= start && transactionDate <= end;
+        });
+    };
+
+    const filteredByDate = filterByDateRange(data);
+    const filteredData = selectedCreator ? filteredByDate.filter(item => item.mode === selectedCreator) : filteredByDate;
+
     return (
         <>
             <div className='mainn'>
@@ -78,6 +124,7 @@ export default function Main() {
                 <Link to={`/overview/${userId}`}>
                     <button className='login'>Overview</button>
                 </Link>
+
 
 
                 <div className='iconDiv'>
@@ -88,7 +135,26 @@ export default function Main() {
                     )}
                 </div>
             </div>
+
             <br />
+            <div className='sorting'>
+                <div className="filter">
+                    {/* <label htmlFor="createdBy">Filter by Creator:</label> */}
+                    <select className='sort' id="createdBy" value={selectedCreator} onChange={handleCreatorChange}>
+                        <option value="">All</option>
+                        {filter.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="date-picker">
+                    <label htmlFor="startDate">Start Date:</label>
+                    <input type="date" id="startDate" value={startDate} onChange={handleStartDateChange} />
+
+                    <label htmlFor="endDate">End Date:</label>
+                    <input type="date" id="endDate" value={endDate} onChange={handleEndDateChange} />
+                </div>
+            </div>
             {showForm && <TransactionForm onClose={handleCloseForm} />}
             {!showForm && <div className='ttables'>
                 <h2>Transactions</h2>
@@ -106,7 +172,7 @@ export default function Main() {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map(transaction => (
+                            {filteredData.map(transaction => (
                                 transaction.user === userId ? (
                                     <tr key={transaction._id}>
                                         <td>{transaction.title}</td>
