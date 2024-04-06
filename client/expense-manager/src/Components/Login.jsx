@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { jwtDecode as jwt_decode } from 'jwt-decode';
 
-
-function Login() {
+function Login({ handleLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        google.accounts.id.initialize({
+            client_id: "358374114106-pe56que7nt4q3n1o7up00nhgbrdpcnv5.apps.googleusercontent.com",
+            callback: handleCallBackResponse
+        })
+        google.accounts.id.renderButton(
+            document.getElementById("google"),
+            {theme: "outline", size: "large"}
+        )
+    },[])
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -28,6 +39,7 @@ function Login() {
                 const { token } = response.data;
                 document.cookie = `token=${token}; path=/;`;
                 document.cookie = `id=${response.data.user._id}`;
+                handleLogin(); 
                 navigate('/');
             } else {
                 const errorData = response.data;
@@ -39,10 +51,19 @@ function Login() {
         }
     };
 
+    function handleCallBackResponse(response){
+        console.log("encoded", response.credential)
+        const userObj = jwt_decode(response.credential)
+        console.log(userObj)
+        navigate('/')
+    }
+    
+    
+
     return (
         <div className="register">
             <form onSubmit={handleSubmit}>
-            <h1>LOGIN</h1>
+                <h1>LOGIN</h1>
                 <label htmlFor="username">
                     <input type="text" id="username" value={username} onChange={handleUsernameChange} placeholder="Username" />
                     <span>Username</span>
@@ -54,8 +75,10 @@ function Login() {
                 {error && <p className="error-message">{error}</p>}
                 <button type="submit" id='button'>Login</button>
                 <p>If you are a new user, please <Link to="/signup" id="new">SIGN UP</Link></p>
+
+                <div id='google'></div>
+
             </form>
-            
         </div>
     );
 }
