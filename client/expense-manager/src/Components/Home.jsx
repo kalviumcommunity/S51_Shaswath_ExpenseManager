@@ -1,32 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import image from '../assets/logo.png';
 import Main from './Main';
 
-function Home() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+function Home({ isLoggedIn, handleLogout }) {
 
-    useEffect(() => {
-        checkLoginStatus();
-    }, []);
-
-    const checkLoginStatus = () => {
-        const token = getCookie('token');
-        setIsLoggedIn(!!token);
-    };
-
-    const handleLogout = () => {
-        document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        setIsLoggedIn(false);
-        window.location.reload();
-    };
-
-    const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    };
+    
 
     return (
         <div>

@@ -55,9 +55,28 @@ function Login({ handleLogin }) {
         console.log("encoded", response.credential)
         const userObj = jwt_decode(response.credential)
         console.log(userObj)
-        navigate('/')
+        
+        // Send userObj to backend along with JWT token
+        sendUserDataToBackend(userObj);
     }
     
+    async function sendUserDataToBackend(userData) {
+        try {
+            const response = await axios.post('https://expensemanager-2t8j.onrender.com/gusers', userData);
+            console.log('User data sent to backend:', response.data);
+    
+            // Save JWT token locally
+            const { token, user } = response.data;
+            document.cookie = `token=${token}; path=/;`;
+            document.cookie = `id=${user._id}`;
+            // Perform any additional actions after successful login
+            handleLogin();
+            navigate('/');
+        } catch (error) {
+            console.error('Error sending user data to backend:', error);
+            // Handle error
+        }
+    }
     
 
     return (
