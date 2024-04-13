@@ -90,6 +90,9 @@ function Auth({ handleLogin }) {
                     password: signupPassword
                 });
                 if (response.status === 200) {
+                    const { token } = response.data;
+                    document.cookie = `token=${token}; path=/;`;
+                    document.cookie = `id=${response.data.user._id}`;
                     alert('Signup successful! Please login.');
                     handleLogin();
                     navigate('/');
