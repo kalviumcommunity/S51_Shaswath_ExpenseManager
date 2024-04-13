@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './Components/Login';
 import Home from './Components/Home';
-import SignUp from './Components/SignUp';
 import './index.css';
 import Edit from './Components/Edit';
 import Overview from './Components/Overview';
+import Animate from './Animate'
 
 
 
@@ -23,6 +22,7 @@ function App() {
 
   const handleLogin = () => {
     const token = getCookie('token') 
+    console.log("Token", token)
     setIsLoggedIn(!!token);
   };
 
@@ -41,11 +41,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
-          <Route path='/login' element={<Login handleLogin={handleLogin} />} />
-          <Route path='/signup' element={<SignUp handleLogin={handleLogin} />} />
+          <Route path='/login' element={<Animate handleLogin={handleLogin} />} />
+          {/* <Route path='/signup' element={<SignUp handleLogin={handleLogin} />} /> */}
           <Route path='/edit/:id' element={<Edit/>} />
           <Route path='/overview/:userId' element={<Overview />} />
         </Routes>
+      {/* <Animate handleLogin={handleLogin} /> */}
+
       </BrowserRouter>
     </>
   );
