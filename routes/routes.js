@@ -1,7 +1,7 @@
 const express = require('express')
 const User = require('../models/user.model')
 const Transaction = require('../models/transaction.model')
-const GUser = require('./models/gusers.model')
+const GUser = require('../models/gusers.model')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
