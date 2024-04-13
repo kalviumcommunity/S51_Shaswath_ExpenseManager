@@ -4,10 +4,9 @@ const mongoose = require('mongoose');
 const { Connect, isConnected } = require("./db");
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const {signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction} = require('./routes/routes')
+const {signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter} = require('./routes/routes')
 const cookieParser = require('cookie-parser')
-const jwt = require('jsonwebtoken');
-const User = require('./models/gusers.model')
+
 
 const app = express();
 app.use(cors());
@@ -38,6 +37,7 @@ app.use("/", getTransaction)
 app.use("/", editTransaction)
 app.use("/", geteachTransaction)
 app.use("/", deleteTransaction)
+app.use("/", gusersRouter)
 
 
 
@@ -51,39 +51,6 @@ app.get("/", (req, res) => {
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
-});
-
-
-app.post('/gusers', (req, res) => {
-    const userData = req.body;
-    const { email } = userData;
-
-    // Check if user already exists
-    User.findOne({ email })
-        .then(existingUser => {
-            if (existingUser) {
-                // User already exists, return existing user data
-                const token = jwt.sign({ userId: existingUser._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-                res.status(200).json({ user: existingUser, token });
-            } else {
-                // User doesn't exist, create a new user
-                const newUser = new User(userData);
-                newUser.save()
-                    .then(savedUser => {
-                        console.log('User data saved to MongoDB:', savedUser);
-                        const token = jwt.sign({ userId: savedUser._id }, 'your_secret_key', { expiresIn: '1h' });
-                        res.status(200).json({ user: savedUser, token });
-                    })
-                    .catch(err => {
-                        console.error('Error saving user data to MongoDB:', err);
-                        res.status(500).send('Error saving user data to MongoDB');
-                    });
-            }
-        })
-        .catch(err => {
-            console.error('Error finding user in MongoDB:', err);
-            res.status(500).send('Error finding user in MongoDB');
-        });
 });
 
 
