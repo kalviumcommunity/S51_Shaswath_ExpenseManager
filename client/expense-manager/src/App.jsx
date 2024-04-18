@@ -41,13 +41,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
-          <Route path='/login' element={<Animate handleLogin={handleLogin} />} />
-          {/* <Route path='/signup' element={<SignUp handleLogin={handleLogin} />} /> */}
+          <Route path='/signup' element={<Animate handleLogin={handleLogin} />} />
           <Route path='/edit/:id' element={<Edit/>} />
           <Route path='/overview/:userId' element={<Overview />} />
         </Routes>
-      {/* <Animate handleLogin={handleLogin} /> */}
-
       </BrowserRouter>
     </>
   );

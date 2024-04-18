@@ -101,7 +101,7 @@
     top: 0;
     width: 260px;
     height: 100%;
-    padding-top: 360px;
+    padding-top: 180px;
 }
 
 .img:before {
@@ -111,7 +111,7 @@
     top: 0;
     width: 900px;
     height: 100%;
-    background-image: url("ext.jpg");
+    /* background-image: url("ext.jpg"); */
     opacity: .8;
     background-size: cover;
     -webkit-transition: -webkit-transform 1.2s ease-in-out;
