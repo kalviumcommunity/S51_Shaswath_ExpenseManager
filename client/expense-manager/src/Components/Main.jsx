@@ -148,11 +148,14 @@ export default function Main() {
                     </select>
                 </div>
                 <div className="date-picker">
-                    <label htmlFor="startDate">Start Date:</label>
-                    <input type="date" id="startDate" value={startDate} onChange={handleStartDateChange} />
-
-                    <label htmlFor="endDate">End Date:</label>
-                    <input type="date" id="endDate" value={endDate} onChange={handleEndDateChange} />
+                    <div>
+                        <label htmlFor="startDate">From:</label>
+                        <input type="date" id="startDate" value={startDate} onChange={handleStartDateChange} />
+                    </div>
+                    <div>
+                        <label htmlFor="endDate">To:</label>
+                        <input type="date" id="endDate" value={endDate} onChange={handleEndDateChange} />
+                    </div>
                 </div>
             </div>
             {showForm && <TransactionForm onClose={handleCloseForm} />}

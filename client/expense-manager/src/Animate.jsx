@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +5,7 @@ import { jwtDecode as jwt_decode } from 'jwt-decode';
 import './AuthForm.css'; // Import the CSS file
 
 function Auth({ handleLogin }) {
-    const [mode, setMode] = useState('login'); // Default mode is login
+    const [mode, setMode] = useState('signup'); // Default mode is signup
 
     // State variables for login
     const [loginUsername, setLoginUsername] = useState('');
@@ -35,7 +31,7 @@ function Auth({ handleLogin }) {
             { theme: "outline", size: "large" }
         )
         google.accounts.id.renderButton(
-            document.getElementById("googlee"),
+            document.getElementById("googlee"), 
             { theme: "outline", size: "large" }
         )
     }, []);
@@ -153,9 +149,6 @@ function Auth({ handleLogin }) {
                 <div id='google'></div>
             </div>
             <div className="sub-cont">
-                <div className="img">
-                    {/* Your existing image content */}
-                </div>
                 <div className="form sign-up">
                     <h2 className='headingl'>Sign Up</h2>
                     <label className='labell' htmlFor="name">
@@ -175,7 +168,7 @@ function Auth({ handleLogin }) {
                         <span>Password</span>
                     </label>
                     {signupError && <p className="error-message">{signupError}</p>}
-                    <button className='buttonl'  type="submit" onClick={handleSubmit}>Sign Up</button>
+                    <button className='buttonl' type="submit" onClick={handleSubmit}>Sign Up</button>
                     <p>If you have an account, please <button className='buttonll' onClick={() => setMode('login')}>Login</button></p>
                     <p>OR</p>
                     <div id='googlee'></div>
