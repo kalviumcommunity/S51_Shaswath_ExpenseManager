@@ -2,6 +2,7 @@ const express = require('express')
 const User = require('../models/user.model')
 const Transaction = require('../models/transaction.model')
 const GUser = require('../models/gusers.model')
+const Remainders = require('../models/remainders.model')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
@@ -16,6 +17,8 @@ const editTransaction = express.Router()
 const geteachTransaction = express.Router()
 const deleteTransaction = express.Router()
 const gusersRouter = express.Router()
+const getRemainders = express.Router()
+const postRemainders = express.Router()
 
 
 // SignUP route
@@ -107,6 +110,25 @@ function authenticateToken(req, res, next) {
     });
 }
 
+postRemainders.post("/addremainders", async(req, res)=>{
+    try{
+        const {date, title, amount, mode} = req.body
+        if (!title || !date || !amount || !mode) {
+            return res.status(400).json({ message: "Please provide all required fields" });
+        }
+        const newRemainder = await Remainders.create({
+            title,
+            date,
+            amount,
+            mode
+            
+        });
+
+        return res.status(200).json({ message: "remainder added successfully", remainder: newRemainder });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+})
 
 // Add Transaction route
 transactionRouter.post("/add", authenticateToken, async (req, res) => {
@@ -136,7 +158,14 @@ transactionRouter.post("/add", authenticateToken, async (req, res) => {
 });
 
 
-
+getRemainders.get("/getremainders", async(req, res)=>{
+    try{
+        const remainder = await Remainders.find()
+        res.status(200).json(remainder)
+    } catch(error){
+        res.status(500).json({message: error.message})
+    }
+})
 
 // Getting transactions
 getTransaction.get("/get", async (req, res) => {
@@ -231,4 +260,4 @@ gusersRouter.post('/gusers', (req, res) => {
 
 
 
-module.exports = { signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter }
+module.exports = { signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter, getRemainders, postRemainders }
