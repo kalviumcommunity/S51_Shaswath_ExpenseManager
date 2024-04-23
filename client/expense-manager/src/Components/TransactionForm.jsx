@@ -10,6 +10,7 @@ const TransactionForm = ({ onClose }) => {
     category: '',
     description: '',
     mode: '',
+    image: null, // New state to store the selected image file
   });
   const [error, setError] = useState('');
 
@@ -32,16 +33,29 @@ const TransactionForm = ({ onClose }) => {
     });
   };
 
+  const handleImageChange = (e) => {
+    setFormData({
+      ...formData,
+      image: e.target.files[0], // Update image state with the selected file
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = getCookie('token');
       let userId = getCookie("id");
       formData.user = userId;
-      const response = await axios.post('https://expensemanager-2t8j.onrender.com/add', formData, {
+
+      const formDataWithImage = new FormData(); // Create FormData object for sending image
+      for (const key in formData) {
+        formDataWithImage.append(key, formData[key]);
+      }
+
+      const response = await axios.post('https://expensemanager-2t8j.onrender.com/add', formDataWithImage, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data', // Set content type to multipart/form-data for uploading files
         },
       });
       console.log('Transaction added successfully:', response.data.transaction);
@@ -52,6 +66,7 @@ const TransactionForm = ({ onClose }) => {
         category: '',
         description: '',
         mode: '',
+        image: null, // Reset image state after successful submission
       });
       setError('');
       alert('Transaction added successfully');
@@ -62,7 +77,6 @@ const TransactionForm = ({ onClose }) => {
       setError('Something went wrong. Please try again later.');
     }
   };
-
   return (
     <div className="register">
       <form onSubmit={handleSubmit}>
@@ -106,6 +120,10 @@ const TransactionForm = ({ onClose }) => {
             <option value="Debit">Debit</option>
           </select>
           <span>Type</span>
+        </label>
+        <label htmlFor="image">
+          <input type="file" id="image" name="image" onChange={handleImageChange} accept="image/*" />
+          <span>Upload Image</span>
         </label>
         <button type="submit" id='button'>Submit</button>
         <button type="button" id='button' onClick={onClose}>Close</button>

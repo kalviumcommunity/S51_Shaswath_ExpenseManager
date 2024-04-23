@@ -172,6 +172,7 @@ export default function Main() {
                                 <th>Description</th>
                                 <th>Mode</th>
                                 <th>Actions</th>
+                                <th>Images</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -188,6 +189,10 @@ export default function Main() {
                                             <Link className='link' to={`/edit/${transaction._id}`}><EditIcon className="action-button" /></Link>
                                             <DeleteIcon className="action-button" onClick={() => handleDelete(transaction._id)} />
                                         </td>
+                                        <td>
+                                            {transaction.imageUrl ? <img src={transaction.imageUrl} alt="Transaction Image" style={{ width: '150px', height: '200px', borderRadius: '5px' }} /> : <span>No Image</span>}
+                                        </td>
+
                                     </tr>
                                 ) : null
                             ))}
