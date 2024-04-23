@@ -12,6 +12,7 @@ export default function Edit() {
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [mode, setMode] = useState('');
+    const [image, setImage] = useState(null); 
     const [error, setError] = useState(''); 
     
     const navigate = useNavigate();
@@ -39,6 +40,11 @@ export default function Edit() {
         }
         fetchTransactionData()
     },[id])
+
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
+    };
+
 
     const handleSubmit = async (e) => {
         try {
@@ -155,6 +161,16 @@ export default function Edit() {
                         <option value="Debit">Debit</option>
                     </select>
                     <span>Type</span>
+                </label>
+                <label htmlFor="image">
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        onChange={handleImageChange}
+                        accept="image/*" // Limit file type to images
+                    />
+                    <span>Upload Image</span>
                 </label>
                 <button type="submit" id="button">
                     Submit
