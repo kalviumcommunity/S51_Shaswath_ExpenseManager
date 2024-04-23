@@ -4,49 +4,25 @@ const mongoose = require('mongoose');
 const { Connect, isConnected } = require("./db");
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const {signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter, getRemainders, postRemainders} = require('./routes/routes')
+const { signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter, getRemainders, postRemainders } = require('./routes/routes')
 const cookieParser = require('cookie-parser')
 const multer = require("multer");
 const path = require("path");
+const fs = require('fs');
 
+// const Image = require('./models/image.model')
+// const jwt = require('jsonwebtoken');
+const Transaction = require('./models/transaction.model')
+
+
+const upload = multer();
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(express.static('images'));
 
-
-const storage = multer.diskStorage({
-    destination: './upload/images',
-    filename: (req, file, cb) => {
-        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-    }
-})
-
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1000000
-    }
-})
-app.use('/profile', express.static('upload/images'));
-app.post("/upload", upload.single('profile'), (req, res) => {
-
-    res.json({
-        success: 1,
-        profile_url: `http://localhost:7777/profile/${req.file.filename}`
-    })
-})
-
-function errHandler(err, req, res, next) {
-    if (err instanceof multer.MulterError) {
-        res.json({
-            success: 0,
-            message: err.message
-        })
-    }
-}
-app.use(errHandler);
 
 // Connect to MongoDB
 Connect()
@@ -56,10 +32,11 @@ Connect()
         app.listen(process.env.PORT || 3000, () => {
             console.log(`Server running on port ${process.env.PORT || 3000}`);
         });
-    }) .catch((error) => {
+    }).catch((error) => {
         console.error("Failed to connect to MongoDB:", error.message);
-        process.exit(1); 
+        process.exit(1);
     });
+
 
 // Routes
 app.use("/", signUpRouter)
@@ -73,7 +50,6 @@ app.use("/", deleteTransaction)
 app.use("/", gusersRouter)
 app.use("/", getRemainders)
 app.use("/", postRemainders)
-
 
 // Home Route
 app.get("/", (req, res) => {
