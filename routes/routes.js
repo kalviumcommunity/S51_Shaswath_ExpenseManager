@@ -6,6 +6,9 @@ const Remainders = require('../models/remainders.model')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const multer = require('multer')
+const app = express()
+const path = require('path');
 
 
 const signUpRouter = express.Router()
@@ -19,6 +22,7 @@ const deleteTransaction = express.Router()
 const gusersRouter = express.Router()
 const getRemainders = express.Router()
 const postRemainders = express.Router()
+
 
 
 // SignUP route
@@ -130,8 +134,17 @@ postRemainders.post("/addremainders", async(req, res)=>{
     }
 })
 
-// Add Transaction route
-transactionRouter.post("/add", authenticateToken, async (req, res) => {
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'images');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer();
+
+transactionRouter.post("/add", authenticateToken, upload.single('image'), async (req, res) => {
     try {
         const { title, date, amount, category, description, mode, user } = req.body;
 
@@ -140,7 +153,16 @@ transactionRouter.post("/add", authenticateToken, async (req, res) => {
             return res.status(400).json({ message: "Please provide all required fields" });
         }
 
-        // Create new transaction with user ID
+        // Get the uploaded image data and create image URL
+        let imageUrl = null;
+        if (req.file) {
+            const imageBuffer = req.file.buffer;
+            const imageType = req.file.mimetype.split('/')[1];
+            const base64Image = imageBuffer.toString('base64');
+            imageUrl = `data:image/${imageType};base64,${base64Image}`;
+        }
+
+        // Create new transaction with user ID and optional image URL
         const newTransaction = await Transaction.create({
             title,
             date,
@@ -148,7 +170,8 @@ transactionRouter.post("/add", authenticateToken, async (req, res) => {
             category,
             description,
             mode,
-            user
+            user,
+            imageUrl, // Store the image URL in the transaction document
         });
 
         return res.status(200).json({ message: "Transaction added successfully", transaction: newTransaction });
@@ -156,7 +179,6 @@ transactionRouter.post("/add", authenticateToken, async (req, res) => {
         return res.status(500).json({ success: false, message: err.message });
     }
 });
-
 
 getRemainders.get("/getremainders", async(req, res)=>{
     try{
