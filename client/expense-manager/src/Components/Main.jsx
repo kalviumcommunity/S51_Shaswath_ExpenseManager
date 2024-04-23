@@ -190,7 +190,7 @@ export default function Main() {
                                             <DeleteIcon className="action-button" onClick={() => handleDelete(transaction._id)} />
                                         </td>
                                         <td>
-                                            {transaction.imageUrl ? <img src={transaction.imageUrl} alt="Transaction Image" style={{ width: '150px', height: '200px', borderRadius: '5px' }} /> : <span>No Image</span>}
+                                            {transaction.imageUrl ? <img src={transaction.imageUrl} alt="Transaction Image" style={{ width: '200px', height: '200px', borderRadius: '5px' }} /> : <span>No Image</span>}
                                         </td>
 
                                     </tr>
