@@ -131,6 +131,10 @@ th {
     color: inherit;
 }
 
+.link div{
+    width: fit-content;
+}
+
 .action-button {
     cursor: pointer;
 

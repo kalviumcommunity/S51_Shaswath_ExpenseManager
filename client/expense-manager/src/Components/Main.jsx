@@ -9,6 +9,7 @@ import "./Main.css";
 import TransactionForm from './TransactionForm';
 
 
+
 export default function Main() {
     const [showForm, setShowForm] = useState(false);
     const [data, setData] = useState([]);
@@ -190,8 +191,15 @@ export default function Main() {
                                             <DeleteIcon className="action-button" onClick={() => handleDelete(transaction._id)} />
                                         </td>
                                         <td>
-                                            {transaction.imageUrl ? <img src={transaction.imageUrl} alt="Transaction Image" style={{ width: '200px', height: '200px', borderRadius: '5px' }} /> : <span>No Image</span>}
+                                            {transaction.imageUrl ? (
+                                                <Link className='link'  to='/images'>
+                                                    <div>Image Avaliable</div>
+                                                </Link>
+                                            ) : (
+                                                <div>No Image Avaliable</div>
+                                            )}
                                         </td>
+
 
                                     </tr>
                                 ) : null
