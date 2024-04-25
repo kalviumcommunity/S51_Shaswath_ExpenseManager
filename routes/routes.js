@@ -172,7 +172,6 @@ transactionRouter.post("/add", authenticateToken, upload.single('image'), async 
             user,
             imageUrl, // Store the image URL in the transaction document
         });
-        res.json({ imageUrl }); // Include imageUrl in the response
         return res.status(200).json({ message: "Transaction added successfully", transaction: newTransaction });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
