@@ -16,9 +16,10 @@ function Home({ isLoggedIn, handleLogout }) {
                 <img alt='image' src={image}></img>
                 <div className='child'>
                     {isLoggedIn ? (
-                        <>
+                        <div className='innerChild'>
                             <button className="logout" onClick={handleLogout}>LOGOUT</button> <br />
-                        </>
+                            <Link to='/rem'><button className='logout'>REMAINDER</button></Link>
+                        </div>
                     ) : (
                         <>
                             {/* <Link to='/login'><button className="login">LOGIN</button></Link> */}

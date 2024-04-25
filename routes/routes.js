@@ -58,7 +58,6 @@ signUpRouter.post("/signup", async (req, res) => {
 })
 
 
-// Login Route
 LoginRouter.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -74,12 +73,11 @@ LoginRouter.post('/login', async (req, res) => {
             return res.status(400).json({ Message: "Invalid Username or password" });
         }
         // Create JWT token
-        const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY);
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY); // Include userId in token
 
         // Store token in cookie
-        console.log(user)
         res.cookie('token', token, { httpOnly: true });
-        console.log("token", token, user.username)
+
         return res.status(200).json({
             message: `Welcome back, ${user.username}`,
             user,
@@ -113,25 +111,30 @@ function authenticateToken(req, res, next) {
     });
 }
 
-postRemainders.post("/addremainders", async(req, res)=>{
-    try{
-        const {date, title, amount, mode} = req.body
+
+postRemainders.post("/addremainders", async(req, res) => {
+    try {
+        const { date, title, amount, mode, user } = req.body;
+
+
         if (!title || !date || !amount || !mode) {
             return res.status(400).json({ message: "Please provide all required fields" });
         }
+
         const newRemainder = await Remainders.create({
             title,
             date,
             amount,
-            mode
-            
+            mode,
+            user
         });
 
-        return res.status(200).json({ message: "remainder added successfully", remainder: newRemainder });
+        return res.status(200).json({ message: "Remainder added successfully", remainder: newRemainder });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }
-})
+});
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

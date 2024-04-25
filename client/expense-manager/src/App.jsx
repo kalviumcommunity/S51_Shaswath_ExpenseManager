@@ -7,6 +7,7 @@ import Edit from './Components/Edit';
 import Overview from './Components/Overview';
 import Animate from './Animate';
 import Image from './Components/Image';
+import Remainders from './Components/Remainders';
 
 // 1. Create a context
 const UserIdContext = createContext();
@@ -49,6 +50,7 @@ function App() {
           <Route path='/overview/:userId' element={<Overview />} />
           {/* 3. Pass userId as a prop to the Image component */}
           <Route path='/images' element={<Image userId={userId} />} />
+          <Route path='/rem' element={<Remainders userId={userId} />}></Route>
         </Routes>
       </BrowserRouter>
     </UserIdContext.Provider>

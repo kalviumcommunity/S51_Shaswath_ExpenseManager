@@ -11,6 +11,9 @@ img{
 h1, p, h3{
   color: rgb(51, 186, 240);
 }
+.innerChild{
+  display: flex;
+}
 .authentication{
     display: flex;
     justify-content: space-between;
