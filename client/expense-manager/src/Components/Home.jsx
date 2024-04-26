@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import image from '../assets/logo.png';
@@ -6,10 +6,17 @@ import Main from './Main';
 import { FacebookOutlined } from '@mui/icons-material';
 import { Twitter } from '@mui/icons-material';
 import { Instagram } from '@mui/icons-material';
-function Home({ isLoggedIn, handleLogout }) {
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
-
+function Home({ isLoggedIn, handleLogout, remindMe }) {
+    useEffect(() => {
+        if (remindMe) {
+            console.log('Reminder Alerted !!!!');
+            toast.info('Reminder is due today');
+        }
+    }, [remindMe]);
     return (
         <div>
             <div className='authentication'>
@@ -19,6 +26,7 @@ function Home({ isLoggedIn, handleLogout }) {
                         <div className='innerChild'>
                             <button className="logout" onClick={handleLogout}>LOGOUT</button> <br />
                             <Link to='/rem'><button className='logout'>REMAINDER</button></Link>
+                            <ToastContainer />
                         </div>
                     ) : (
                         <>
