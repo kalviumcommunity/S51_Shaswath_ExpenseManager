@@ -17,10 +17,7 @@ function App() {
   const [userId, setUserId] = useState('');
   const [remindMe, setRemindMe] = useState(false); // State to track reminders
 
-  // Function to update remindMe state
-  const handleRemindMe = (value) => {
-    setRemindMe(value);
-  };
+
 
   useEffect(() => {
     handleLogin();
@@ -50,13 +47,13 @@ function App() {
     <UserIdContext.Provider value={userId}> {/* 2. Provide userId context */}
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home remindMe={remindMe} setRemindMe={handleRemindMe} isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
+          <Route path='/' element={<Home remindMe={remindMe} setRemindMe={setRemindMe} isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
           <Route path='/signup' element={<Animate handleLogin={handleLogin} />} />
           <Route path='/edit/:id' element={<Edit />} />
           <Route path='/overview/:userId' element={<Overview />} />
           {/* 3. Pass userId as a prop to the Image component */}
           <Route path='/images' element={<Image userId={userId} />} />
-          <Route path='/rem' element={<Remainders remindMe={remindMe} setRemindMe={handleRemindMe} userId={userId} />}></Route>
+          <Route path='/rem' element={<Remainders remindMe={remindMe} setRemindMe={setRemindMe} userId={userId} />}></Route>
         </Routes>
       </BrowserRouter>
     </UserIdContext.Provider>
