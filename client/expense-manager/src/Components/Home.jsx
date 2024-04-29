@@ -14,6 +14,7 @@ function Home({ isLoggedIn, handleLogout, remindMe }) {
     useEffect(() => {
         if (remindMe) {
             console.log('Reminder Alerted !!!!');
+            console.log(remindMe)
             toast.info('Reminder is due today');
         }
     }, [remindMe]);
