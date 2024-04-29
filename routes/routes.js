@@ -200,6 +200,21 @@ getTransaction.get("/get", async (req, res) => {
     }
 });
 
+editTransaction.patch("/patchremainders/:id", async(req, res)=>{
+    try{
+        const {id} = req.params
+        const updated = req.body
+        const updatedRemainder = await Remainders.findOneAndUpdate({_id: id}, updated, {new: true});
+        if(!updatedRemainder){
+            return res.status(404).json({error: 'Remainder not found'});
+        }
+        res.status(200).json(updatedRemainder)
+    } catch(err){
+        console.log(err)
+        res.status(500).json({error: "Internal server error"})
+    }
+})
+
 // Editing transactions
 editTransaction.patch("/patch/:id", async (req, res) => {
     try {
@@ -230,6 +245,21 @@ geteachTransaction.get('/get/:id', async (req, res) => {
         res.status(500).json({ error: 'Something went wrong' });
     }
 });
+
+deleteTransaction.delete('/deleteremainders/:id', async(req, res)=>{
+    try{
+        const {id} = req.params
+        const deleteRemainder = await Remainders.findOneAndDelete({_id: id})
+        if(!deleteRemainder){
+            return res.status(404).json({ error: 'Remainder not found' });
+        }
+        res.status(200).json(deleteRemainder);
+    } catch(err){
+        console.error(err);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+})
+
 
 // Deleting a transaction
 deleteTransaction.delete('/delete/:id', async (req, res) => {
