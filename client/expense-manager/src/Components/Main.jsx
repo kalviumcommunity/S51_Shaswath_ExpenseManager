@@ -121,7 +121,7 @@ export default function Main() {
     return (
         <>
             <div className='mainn'>
-                <button className='login' onClick={handleAddNewTransaction}>Add New Transaction</button>
+                <Link to='/form'><button className='login' onClick={handleAddNewTransaction}>Add New Transaction</button></Link>
                 <Link to={`/overview/${userId}`}>
                     <button className='login'>Overview</button>
                 </Link>
@@ -159,7 +159,7 @@ export default function Main() {
                     </div>
                 </div>
             </div>
-            {showForm && <TransactionForm onClose={handleCloseForm} />}
+            {/* {showForm && <TransactionForm onClose={handleCloseForm} />} */}
             {!showForm && <div className='ttables'>
                 <h2>Transactions</h2>
                 {data.length >= 0 ? (

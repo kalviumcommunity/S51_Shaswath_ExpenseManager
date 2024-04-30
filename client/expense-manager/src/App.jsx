@@ -8,6 +8,8 @@ import Overview from './Components/Overview';
 import Animate from './Animate';
 import Image from './Components/Image';
 import Remainders from './Components/Remainders';
+import Login from './Components/Login'
+import TransactionForm from './Components/TransactionForm';
 
 // 1. Create a context
 const UserIdContext = createContext();
@@ -48,15 +50,17 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home remindMe={remindMe} setRemindMe={setRemindMe} isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
-          <Route path='/signup' element={<Animate handleLogin={handleLogin} />} />
+          <Route path='/signup' element={<Login handleLogin={handleLogin} />} />
           <Route path='/edit/:id' element={<Edit />} />
           <Route path='/overview/:userId' element={<Overview />} />
+          <Route path='form' element={<TransactionForm/>} />
           {/* 3. Pass userId as a prop to the Image component */}
           <Route path='/images' element={<Image userId={userId} />} />
           <Route path='/rem' element={<Remainders remindMe={remindMe} setRemindMe={setRemindMe} userId={userId} />}></Route>
         </Routes>
       </BrowserRouter>
     </UserIdContext.Provider>
+    // <Login/>
   );
 }
 
