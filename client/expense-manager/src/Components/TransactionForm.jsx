@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './TransactionForm.css';
 
-const TransactionForm = ({ onClose }) => {
+const TransactionForm = () => {
   const [formData, setFormData] = useState({
     title: '',
     date: '',
@@ -13,6 +14,7 @@ const TransactionForm = ({ onClose }) => {
     image: null, // New state to store the selected image file
   });
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const getCookie = (name) => {
     const cookies = document.cookie.split(';');
@@ -77,22 +79,30 @@ const TransactionForm = ({ onClose }) => {
       setError('Something went wrong. Please try again later.');
     }
   };
+  const onClose = () => {
+    navigate('/')
+  }
   return (
     <div className="register">
       <form onSubmit={handleSubmit}>
-        <label htmlFor="title">
+
+        <div className="input-group">
+          <label>Title</label>
           <input type="text" id="title" name="title" placeholder="Title" required value={formData.title} onChange={handleChange} />
-          <span>Title</span>
-        </label>
-        <label htmlFor="date">
-          <input type="date" id="date" name="date" required value={formData.date} onChange={handleChange} />
-          <span>Date</span>
-        </label>
-        <label htmlFor="amount">
+        </div>
+
+        <div className="input-group">
+          <label>Date</label>
+          <input type="date" id="date" name="date" placeholder="Date" required value={formData.date} onChange={handleChange} />
+        </div>
+
+        <div className="input-group">
+          <label>Amount</label>
           <input type="number" id="amount" name="amount" placeholder="Amount" required value={formData.amount} onChange={handleChange} />
-          <span>Amount</span>
-        </label>
-        <label htmlFor="category">
+        </div>
+
+        <div className="input-group">
+          <label>Category</label>
           <select className='select' id="category" name="category" value={formData.category} required onChange={handleChange}>
             <option value="">Select category</option>
             <option value="Food">Food</option>
@@ -107,24 +117,26 @@ const TransactionForm = ({ onClose }) => {
             <option value="Salary">Salary</option>
             <option value="Others">Others</option>
           </select>
-          <span>Category</span>
-        </label>
-        <label htmlFor="description">
-          <input type="text" id="description" name="description" placeholder="Description" required value={formData.description} onChange={handleChange} />
-          <span>Description</span>
-        </label>
-        <label htmlFor="mode">
+        </div>
+
+        <div className="input-group">
+          <label>Description</label>
+          <input type="text" id="description" name="description" value={formData.description} onChange={handleChange} placeholder="Description" />
+        </div>
+
+        <div className="input-group">
+          <label>Type</label>
           <select className='select' id="mode" name="mode" value={formData.mode} required onChange={handleChange}>
             <option value="">Select type</option>
             <option value="Credit">Credit</option>
             <option value="Debit">Debit</option>
           </select>
-          <span>Type</span>
-        </label>
-        <label htmlFor="image">
+        </div>
+
+        <div className="input-group">
+          <label>Image</label>
           <input type="file" id="image" name="image" onChange={handleImageChange} accept="image/*" />
-          <span>Upload Image</span>
-        </label>
+        </div>
         <button type="submit" id='button'>Submit</button>
         <button type="button" id='button' onClick={onClose}>Close</button>
         {error && <p className="error-message">{error}</p>}

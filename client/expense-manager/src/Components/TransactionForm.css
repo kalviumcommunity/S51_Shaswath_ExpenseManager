@@ -1,100 +1,36 @@
-form{
+.register{
+    width: 550px;  
     margin-left: auto;
     margin-right: auto;
-    width:400px;
-    background-color: transparent;
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-    border-radius:5px;
-    font-size: 16px;
-    box-shadow: 0 0 50px #0ef;
 }
-
-label{
-    background-color: transparent;
+.register div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between ;
+}
+.register label{
     color: white;
-    margin-bottom:15px;
-    position:relative;
-    border-bottom:1px solid #ddd;
 }
-input{
-    color: #0ef;
-    width:100%;
-    padding:10px 0px;
-    margin-top:20px;
-    border:none;
-    outline:none;
-    appearance: none;
-    background-color: transparent;
+.register div input{
+    /* border: 2px solid red; */
+    width: 400px;
+    height: 50px;
 }
-input::placeholder{
-    opacity:0;
-}
-span{
-
-    position:absolute;
-    top:0;
-    left:0;
-    transform:translateY(20px);
-    font-size:16px;
-    transition-duration:300ms;
-}
-#button{
-    padding:15px 0px; 
-    margin-top:20px;
-    background:#0ef;
-    color:black;
-    border:1px solid #0ef;
-    cursor:pointer;
-    border-radius:3px;
-}
-
-label:focus-within > span,
-input:not(:placeholder-shown) + span{
-    color:white;
-    transform:translateY(0px);
-}
-
-.select {
-    border: 3px solid red;
-    color: #0ef;
-    width: 100%;
-    padding: 10px 0px;
-    margin-top: 20px;
-    border: none;
+.register div select{
+    width: 400px;
+    height: 50px;
+    border-radius: 10px ;
     outline: none;
-    background-color: transparent;
-    appearance: none;
 }
-
-.select option{
-    background-color: black;
-}
-
-/* Animation for select */
-.select + span {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateY(30px);
-    font-size: 16px;
-    transition-duration: 300ms;
-}
-
-label:focus-within > span,
-.select:not(:placeholder-shown) + span {
-    color: white;
-    transform: translateY(0px);
-}
-
-
-
-#new{
-    color: inherit;
-    
-}
-
-input{
-    color-scheme:dark ;
+.register button{
+    margin-bottom: 20px;
+    cursor: pointer;
+    width: 70%;
+    border: none;
+    padding: 0.6rem 0;
+    border-radius: 0.5rem;
+    background-color: #4ea685;
+    color: var(--white);
+    font-size: 1.2rem;
+    outline: none;
 }
