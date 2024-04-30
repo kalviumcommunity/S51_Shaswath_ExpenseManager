@@ -5,7 +5,6 @@ import Home from './Components/Home';
 import './index.css';
 import Edit from './Components/Edit';
 import Overview from './Components/Overview';
-import Animate from './Animate';
 import Image from './Components/Image';
 import Remainders from './Components/Remainders';
 import Login from './Components/Login'

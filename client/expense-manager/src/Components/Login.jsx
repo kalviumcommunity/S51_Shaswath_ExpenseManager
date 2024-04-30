@@ -66,6 +66,8 @@ const YourComponent = ({handleLogin}) => {
         e.preventDefault();
         try {
             if (isSignIn) {
+                document.cookie = `id=${response.data.user._id}`;
+
                 const response = await axios.post('https://expensemanager-2t8j.onrender.com/login', {
                     username: loginUsername,
                     password: loginPassword
