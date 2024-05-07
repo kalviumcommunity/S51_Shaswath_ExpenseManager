@@ -39,7 +39,7 @@ function Remainders({ userId, remindMe, setRemindMe }) {
             });
         }
     }, [editIndex, remainders]);
-    
+
 
     const fetchRemainders = async () => {
         try {
@@ -94,7 +94,7 @@ function Remainders({ userId, remindMe, setRemindMe }) {
                     alert(data.error || 'Failed to add remainder');
                 }
             }
-    
+
             setFormData({
                 title: '',
                 date: '',
@@ -102,35 +102,35 @@ function Remainders({ userId, remindMe, setRemindMe }) {
                 mode: ''
             });
             setShowModal(false);
-    
+
             // // Check if any reminder matches today's date
             // const today = new Date().toISOString().slice(0, 10);
             // const remindToday = remainders.some(reminder => reminder.date === today);
             // setRemindMe(remindToday);
-    
+
         } catch (error) {
             console.error('Error adding or updating remainder:', error);
         }
     };
 
     const handleRemind = () => {
-        const today = new Date().toISOString().slice(0,10);
+        const today = new Date().toISOString().slice(0, 10);
         console.log(today); // Log today's date for reference
-        
+
         const userReminders = remainders.filter(item => item.user === userId);
         console.log(userReminders.map(item => item.date)); // Log dates for the user
-        
-        const remindersToday = userReminders.filter(item => item.date.slice(0,10) === today);
+
+        const remindersToday = userReminders.filter(item => item.date.slice(0, 10) === today);
         console.log(remindersToday.map(item => item.date)); // Log dates that match today's date for the user
-        
+
         if (remindersToday.length > 0) {
             setRemindMe(true);
         } else {
             setRemindMe(false);
         }
     }
-    
-    
+
+
 
     const handleDeleteRemainder = async id => {
         try {
@@ -201,24 +201,33 @@ function Remainders({ userId, remindMe, setRemindMe }) {
             <button onClick={() => setShowModal(true)}>Add Remainder</button>
 
             {showModal && (
-                <div id="add-remainder-modal" style={{ width: '300px', marginLeft: 'auto', marginRight: 'auto' }}>
-                    <h2 style={{ fontSize: '20px', marginBottom: '20px' }}>{editIndex !== null ? 'Edit Remainder' : 'Add New Remainder'}</h2>
-                    <form onSubmit={handleAddRemainder} style={{ display: 'flex', flexDirection: 'column' }}>
-                        <label htmlFor="title" style={{ marginBottom: '5px' }}>Title:</label>
-                        <input type="text" id="title" name="title" value={formData.title} onChange={handleInputChange} required style={{ padding: '8px', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '4px' }} />
-                        <label htmlFor="date" style={{ marginBottom: '5px' }}>Date:</label>
-                        <input type="date" id="date" name="date" value={formData.date} onChange={handleInputChange} required style={{ padding: '8px', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '4px' }} />
-                        <label htmlFor="amount" style={{ marginBottom: '5px' }}>Amount:</label>
-                        <input type="number" id="amount" name="amount" value={formData.amount} onChange={handleInputChange} required style={{ padding: '8px', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '4px' }} />
-                        <label htmlFor="mode" style={{ marginBottom: '5px' }}>Mode:</label>
-                        <select name="mode" value={formData.mode} onChange={handleInputChange} required style={{ padding: '8px', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '4px' }}>
-                            <option value="">Select Type</option>
-                            <option value="Credit">Credit</option>
-                            <option value="Debit">Debit</option>
-                        </select>
-                        <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#007bff', marginBottom: '15px', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>{editIndex !== null ? 'Save' : 'Add'}</button>
-                        <button type="button" onClick={handleCloseModal} style={{ padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+                <div className="register">
+                    <h2 className="form-heading">{editIndex !== null ? 'Edit Reminder' : 'Add New Reminder'}</h2>
+                    <form onSubmit={handleAddRemainder} className="form-container">
+                        <div className="input-group">
+                            <label htmlFor="title" className="form-label">Title:</label>
+                            <input type="text" id="title" name="title" value={formData.title} onChange={handleInputChange} required className="form-input" />
+                        </div>
+                        <div className="input-group">
+                            <label htmlFor="date" className="form-label">Date:</label>
+                            <input type="date" id="date" name="date" value={formData.date} onChange={handleInputChange} required className="form-input" />
+                        </div>
+                        <div className="input-group">
+                            <label htmlFor="amount" className="form-label">Amount:</label>
+                            <input type="number" id="amount" name="amount" value={formData.amount} onChange={handleInputChange} required className="form-input" />
+                        </div>
+                        <div className="input-group">
+                            <label htmlFor="mode" className="form-label">Mode:</label>
+                            <select name="mode" value={formData.mode} onChange={handleInputChange} required className="form-input">
+                                <option value="">Select Type</option>
+                                <option value="Credit">Credit</option>
+                                <option value="Debit">Debit</option>
+                            </select>
+                        </div>
+                        <button type="submit" className="form-button">{editIndex !== null ? 'Save' : 'Add'}</button>
+                        <button type="button" onClick={handleCloseModal} className="form-button">Close</button>
                     </form>
+
                 </div>
             )}
         </div>

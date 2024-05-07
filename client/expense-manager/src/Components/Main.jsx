@@ -140,7 +140,6 @@ export default function Main() {
             <br />
             <div className='sorting'>
                 <div className="filter">
-                    {/* <label htmlFor="createdBy">Filter by Creator:</label> */}
                     <select className='sort' id="createdBy" value={selectedCreator} onChange={handleCreatorChange}>
                         <option value="">All</option>
                         {filter.map(option => (
