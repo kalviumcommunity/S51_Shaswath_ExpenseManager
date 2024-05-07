@@ -24,6 +24,13 @@ const YourComponent = ({handleLogin}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.body.classList.add('overflow-hidden');
+        return () => {
+            document.body.classList.remove('overflow-hidden');
+        };
+    }, []);
+
+    useEffect(() => {
         google.accounts.id.initialize({
             client_id: "358374114106-pe56que7nt4q3n1o7up00nhgbrdpcnv5.apps.googleusercontent.com",
             callback: handleCallBackResponse
@@ -70,6 +77,7 @@ const YourComponent = ({handleLogin}) => {
                     username: loginUsername,
                     password: loginPassword
                 });
+                document.cookie = `id=${response.data.user._id}`;
                 if (response.status === 200) {
                     const { token } = response.data;
                     document.cookie = `token=${token}; path=/;`;
@@ -142,6 +150,8 @@ const YourComponent = ({handleLogin}) => {
     const toggle = () => {
         setIsSignIn(!isSignIn);
     };
+    
+
 
     return (
         <div id="container" className={`container ${isSignIn ? 'sign-in' : 'sign-up'}`}>

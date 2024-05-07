@@ -4,7 +4,7 @@ import axios from 'axios';
 
 
 export default function Edit() {
-    const {id} = useParams()
+    const { id } = useParams()
 
     const [title, setTitle] = useState('');
     const [date, setDate] = useState('');
@@ -12,16 +12,16 @@ export default function Edit() {
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [mode, setMode] = useState('');
-    const [image, setImage] = useState(null); 
-    const [error, setError] = useState(''); 
-    
+    const [image, setImage] = useState(null);
+    const [error, setError] = useState('');
+
     const navigate = useNavigate();
 
-    useEffect(()=>{
+    useEffect(() => {
         const fetchTransactionData = async () => {
-            try{
+            try {
                 const response = await axios.get(`https://expensemanager-2t8j.onrender.com/get/${id}`);
-                if(response.status === 200){
+                if (response.status === 200) {
                     const data = response.data
 
                     setTitle(data.title);
@@ -31,15 +31,15 @@ export default function Edit() {
                     setDescription(data.description);
                     setMode(data.mode);
                 }
-                else{
+                else {
                     console.log("Failed to fetch data")
                 }
-            } catch(err){
+            } catch (err) {
                 console.log("Error", err)
             }
         }
         fetchTransactionData()
-    },[id])
+    }, [id])
 
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
@@ -72,54 +72,28 @@ export default function Edit() {
     const close = () => {
         navigate('/')
     }
-
+    
     return (
         <div className="register">
             <form onSubmit={handleSubmit}>
-                <label htmlFor="title">
-                    <input
-                        type="text"
-                        id="title"
-                        name="title"
-                        placeholder="Title"
-                        required
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <span>Title</span>
-                </label>
-                <label htmlFor="date">
-                    <input
-                        type="date"
-                        id="date"
-                        name="date"
-                        required
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                    />
-                    <span>Date</span>
-                </label>
-                <label htmlFor="amount">
-                    <input
-                        type="number"
-                        id="amount"
-                        name="amount"
-                        placeholder="Amount"
-                        required
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                    />
-                    <span>Amount</span>
-                </label>
-                <label htmlFor="category">
-                    <select
-                        className='select'
-                        id="category"
-                        name="category"
-                        value={category}
-                        required
-                        onChange={(e) => setCategory(e.target.value)}
-                    >
+                <div className="input-group">
+                    <label>Title</label>
+                    <input type="text" id="title" name="title" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
+                </div>
+
+                <div className="input-group">
+                    <label>Date</label>
+                    <input type="date" id="date" name="date" placeholder="Date" required value={date} onChange={(e) => setDate(e.target.value)} />
+                </div>
+
+                <div className="input-group">
+                    <label>Amount</label>
+                    <input type="number" id="amount" name="amount" placeholder="Amount" required value={amount} onChange={(e) => setAmount(e.target.value)} />
+                </div>
+
+                <div className="input-group">
+                    <label>Category</label>
+                    <select className='select' id="category" name="category" value={category} required onChange={(e) => setCategory(e.target.value)}>
                         <option value="">Select category</option>
                         <option value="Food">Food</option>
                         <option value="Transportation">Transportation</option>
@@ -133,51 +107,28 @@ export default function Edit() {
                         <option value="Salary">Salary</option>
                         <option value="Others">Others</option>
                     </select>
-                    <span>Category</span>
-                </label>
-                <label htmlFor="description">
-                    <input
-                        type="text"
-                        id="description"
-                        name="description"
-                        placeholder="Description"
-                        required
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <span>Description</span>
-                </label>
-                <label htmlFor="mode">
-                    <select
-                        className='select'
-                        id="mode"
-                        name="mode"
-                        value={mode}
-                        required
-                        onChange={(e) => setMode(e.target.value)}
-                    >
+                </div>
+
+                <div className="input-group">
+                    <label>Description</label>
+                    <input type="text" id="description" name="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
+                </div>
+
+                <div className="input-group">
+                    <label>Type</label>
+                    <select className='select' id="mode" name="mode" value={mode} required onChange={(e) => setMode(e.target.value)}>
                         <option value="">Select type</option>
                         <option value="Credit">Credit</option>
                         <option value="Debit">Debit</option>
                     </select>
-                    <span>Type</span>
-                </label>
-                <label htmlFor="image">
-                    <input
-                        type="file"
-                        id="image"
-                        name="image"
-                        onChange={handleImageChange}
-                        accept="image/*" // Limit file type to images
-                    />
-                    <span>Upload Image</span>
-                </label>
-                <button type="submit" id="button">
-                    Submit
-                </button>
-                <button type="button" id="button" onClick={close}>
-                    Close
-                </button>
+                </div>
+
+                <div className="input-group">
+                    <label htmlFor='image'>Image</label>
+                    <input type="file" id="image" name="image" onChange={handleImageChange} accept="image/*" />
+                </div>
+                <button type="submit" id='button'>Submit</button>
+                <button type="button" id='button' onClick={close}>Close</button>
                 {error && <p className="error-message">{error}</p>}
             </form>
         </div>
