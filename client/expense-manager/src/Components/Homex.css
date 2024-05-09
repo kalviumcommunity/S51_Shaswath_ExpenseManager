@@ -1,0 +1,115 @@
+body{
+    background-color: #4FCA98;
+}
+
+.symbol{
+    width: 400px;
+    height: 100px;
+}
+
+.navbtn{
+    background-color: transparent;
+    font-size: 20px;
+    color: white;
+    border: none;
+}
+
+.navBar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav{
+    width: 500px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.welcome{
+    color: white;
+}
+
+.home{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 80vh;
+}
+
+.cartoon{
+    width: 500px;
+    height: 500px;
+}
+
+.aboutus{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100vh;
+
+}
+
+.aboutuscartoon{
+    height: 450px;
+    width: 550px;
+}
+
+.aboutustext{
+    color: white;
+}
+
+.aboutuschild{
+    width: 600px;
+}
+
+.features{
+    display: flex;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+.featureschild{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* border: 1px solid black; */
+    margin: 10px;
+    padding: 10px;
+    color: black;
+    background-color: white;
+    border-radius: 20px;
+}
+
+.featurestext{
+    color: black;
+}
+
+.contacttext{
+    color: white;
+}
+
+.contactus{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+.contactuscartoon{
+    height: 450px;
+    width: 550px;
+}
+
+.footer {
+    color: #fff;
+    padding: 20px 0;
+}
+
+.footerchild {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}

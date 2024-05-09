@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import image from '../assets/logo.png';
@@ -20,6 +20,7 @@ function Home({ isLoggedIn, handleLogout, remindMe }) {
     }, [remindMe]);
     return (
         <div>
+        {/* <div className='curve'><div className='curves'></div></div> */}
             <div className='authentication'>
                 <img alt='image' src={image}></img>
                 <div className='child'>
@@ -69,14 +70,14 @@ function Home({ isLoggedIn, handleLogout, remindMe }) {
                             <p>&copy; 2024 Expense Vault. All rights reserved.</p>
                             <div className="social-links">
                                 <a href="https://www.facebook.com/expensevault" target="_blank" rel="noopener noreferrer">
-                                    <FacebookOutlined/>
+                                    <FacebookOutlined />
                                 </a>
                                 <a href="https://twitter.com/expensevault" target="_blank" rel="noopener noreferrer">
-                                    <Twitter/>
+                                    <Twitter />
 
                                 </a>
                                 <a href="https://www.instagram.com/expensevault" target="_blank" rel="noopener noreferrer">
-                                    <Instagram/>
+                                    <Instagram />
                                 </a>
                                 <p>For Contact : expensevault@gmail.com</p>
                             </div>
