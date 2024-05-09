@@ -1,50 +1,58 @@
-body{
-    /* background-image: url('../assets/cool-background.png'); */
-    background-color: black;
+body {
+  /* background-color: black; */
+  overflow-x: hidden;
 }
 
-img{
+img {
   width: 250px;
   height: 200px;
 }
-  
-h1, p, h3{
+
+h1,
+p,
+h3 {
   color: rgb(51, 186, 240);
 }
-.innerChild{
+
+.innerChild {
   display: flex;
 }
-.authentication{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    bottom: 80px;
+
+.authentication {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  bottom: 80px;
 }
 
 
 
-.login,.logout,.signup {
-    background-color: white;
-    color: black;
-    text-decoration: none;
-    border: 2px solid white;
-    text-transform:uppercase ;
-    font-size: 1.3em;
-    padding: 10px 30px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    transition: 0.5s;
-    margin-left: 20px;
-    cursor: pointer;
+.login,
+.logout,
+.signup {
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  border: 2px solid white;
+  text-transform: uppercase;
+  font-size: 1.3em;
+  padding: 10px 30px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  transition: 0.5s;
+  margin-left: 20px;
+  cursor: pointer;
 }
 
-.login:hover,.logout:hover,.signup:hover{
-    background-color: transparent;
-    color: white;
-    letter-spacing: 0.25em;
-    box-shadow: 0 0 35px rgb(51, 186, 240);
-    border: 2px solid rgb(51, 186, 240);
+.login:hover,
+.logout:hover,
+.signup:hover {
+  background-color: transparent;
+  color: white;
+  letter-spacing: 0.25em;
+  box-shadow: 0 0 35px rgb(51, 186, 240);
+  border: 2px solid rgb(51, 186, 240);
 }
 
 
@@ -88,7 +96,7 @@ h1, p, h3{
   text-align: center;
 }
 
-.signupnow{
+.signupnow {
   background-color: transparent;
   border: none;
   outline: none;
@@ -98,11 +106,11 @@ h1, p, h3{
 
 /* Footer.css */
 
-.footer {
+/* .footer {
   background-color: #333;
   color: #fff;
-  padding: 20px 0;  
-}
+  padding: 20px 0;
+} */
 
 .footer-content {
   display: flex;
@@ -128,3 +136,26 @@ h1, p, h3{
   font-size: 24px;
 }
 
+.curve {
+  position: absolute;
+  top: 0;
+  left: 1000px;
+  width: 800px;
+  height: 800px;
+  background-color: gray;
+  border-radius: 50%;
+  z-index: -1; 
+  overflow: hidden;
+}
+
+.curves {
+  position: absolute;
+  left: 50px;
+  top: 50px;
+  width: 700px;
+  height: 700px;
+  background-color: black;
+  border-radius: 50%;
+  z-index: -1; 
+  overflow: hidden; 
+}

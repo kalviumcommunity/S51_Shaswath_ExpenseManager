@@ -9,6 +9,7 @@ import Image from './Components/Image';
 import Remainders from './Components/Remainders';
 import Login from './Components/Login'
 import TransactionForm from './Components/TransactionForm';
+import Homex from './Components/Homex';
 
 // 1. Create a context
 const UserIdContext = createContext();
@@ -59,7 +60,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </UserIdContext.Provider>
-    // <Login/>
+    // <Homex/>
   );
 }
 
