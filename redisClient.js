@@ -1,10 +1,10 @@
 const redis = require('redis')
 
 const client = redis.createClient({
-    password: '4arw2fF8Ta3P3r2BZb5iN2HcNbB13KlI', // Replace with actual password (avoid hardcoding)
+    password: process.env.REDIS_PASSWORD , // Replace with actual password (avoid hardcoding)
     socket: {
-        host: 'redis-16339.c305.ap-south-1-1.ec2.redns.redis-cloud.com',
-        port: 16339
+        host: process.env.REDIS_HOST ,
+        port: process.env.REDIS_PORT,
     }
 });
 
