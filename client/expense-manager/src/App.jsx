@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './Components/Home';
+// import Home from './Components/Home';
 import './index.css';
 import Edit from './Components/Edit';
 import Overview from './Components/Overview';
@@ -49,7 +49,7 @@ function App() {
     <UserIdContext.Provider value={userId}> {/* 2. Provide userId context */}
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home remindMe={remindMe} setRemindMe={setRemindMe} isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
+          <Route path='/' element={<Homex userId={userId} remindMe={remindMe} setRemindMe={setRemindMe} isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
           <Route path='/signup' element={<Login handleLogin={handleLogin} />} />
           <Route path='/edit/:id' element={<Edit />} />
           <Route path='/overview/:userId' element={<Overview />} />
