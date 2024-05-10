@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const multer = require('multer')
-const path = require('path');
+const { storeUserInCache, getCachedUser, getCachedRemainders, storeRemaindersInCache, storeTransactioInCache, getCachedTransactions } = require('../redisClient')
 
 
 const signUpRouter = express.Router()
@@ -61,9 +61,20 @@ signUpRouter.post("/signup", async (req, res) => {
 LoginRouter.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
-        if (!username || !password) {
-            return res.status(400).json({ Message: "Please enter all fields" });
+
+        // Check cache for user data
+        const cachedUser = await getCachedUser(username);
+        if (cachedUser) {
+            const token = jwt.sign({ userId: cachedUser._id }, process.env.SECRET_KEY);
+            res.cookie('token', token, { httpOnly: true });
+            return res.status(200).json({
+                message: `Welcome back, ${cachedUser.username}`,
+                user: cachedUser,
+                token
+            });
         }
+
+        // If not cached, perform user lookup and password check
         let user = await User.findOne({ username });
         if (!user) {
             return res.status(400).json({ Message: "User not found" });
@@ -72,11 +83,13 @@ LoginRouter.post('/login', async (req, res) => {
         if (!passwordCheck) {
             return res.status(400).json({ Message: "Invalid Username or password" });
         }
-        // Create JWT token
-        const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY); // Include userId in token
 
-        // Store token in cookie
+        // Create JWT token and handle successful login
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
         res.cookie('token', token, { httpOnly: true });
+
+        // Optionally store user data in cache for future requests
+        await storeUserInCache(user, username);
 
         return res.status(200).json({
             message: `Welcome back, ${user.username}`,
@@ -86,7 +99,7 @@ LoginRouter.post('/login', async (req, res) => {
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }
-})
+});
 
 // Logout Router
 LogoutRouter.get("/logout", (req, res) => {
@@ -112,7 +125,7 @@ function authenticateToken(req, res, next) {
 }
 
 
-postRemainders.post("/addremainders", async(req, res) => {
+postRemainders.post("/addremainders", async (req, res) => {
     try {
         const { date, title, amount, mode, user } = req.body;
 
@@ -136,14 +149,6 @@ postRemainders.post("/addremainders", async(req, res) => {
 });
 
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'images');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
 const upload = multer();
 
 transactionRouter.post("/add", authenticateToken, upload.single('image'), async (req, res) => {
@@ -181,37 +186,60 @@ transactionRouter.post("/add", authenticateToken, upload.single('image'), async 
     }
 });
 
-getRemainders.get("/getremainders", async(req, res)=>{
-    try{
-        const remainder = await Remainders.find()
-        res.status(200).json(remainder)
-    } catch(error){
-        res.status(500).json({message: error.message})
-    }
-})
-
-// Getting transactions
-getTransaction.get("/get", async (req, res) => {
+getRemainders.get("/getremainders", async (req, res) => {
     try {
-        const transactions = await Transaction.find();
-        res.status(200).json(transactions);
+        const cachedRemainders = await getCachedRemainders();
+        if (cachedRemainders) {
+            console.log('Serving remainders from cache');
+            return res.status(200).json(cachedRemainders);
+        }
+
+        // If not cached, fetch from database
+        const remainders = await Remainders.find();
+        res.status(200).json(remainders);
+
+        // Optionally store remainders in cache for future requests
+        await storeRemaindersInCache(remainders);
     } catch (error) {
+        console.error('Error retrieving remainders:', error);
         res.status(500).json({ message: error.message });
     }
 });
 
-editTransaction.patch("/patchremainders/:id", async(req, res)=>{
-    try{
-        const {id} = req.params
+// Getting transactions
+getTransaction.get("/get", async (req, res) => {
+    try {
+        const cachedTransactions = await getCachedTransactions();
+        if (cachedTransactions) {
+            console.log('Serving transactions from cache');
+            return res.status(200).json(JSON.parse(cachedTransactions));
+        }
+
+        // If not cached, fetch from database
+        const transactions = await Transaction.find();
+        res.status(200).json(transactions);
+
+        // Optionally store transactions in cache for future requests
+        await storeTransactioInCache(transactions)
+    } catch (error) {
+        console.error('Error retrieving transactions:', error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+editTransaction.patch("/patchremainders/:id", async (req, res) => {
+    try {
+        const { id } = req.params
         const updated = req.body
-        const updatedRemainder = await Remainders.findOneAndUpdate({_id: id}, updated, {new: true});
-        if(!updatedRemainder){
-            return res.status(404).json({error: 'Remainder not found'});
+        const updatedRemainder = await Remainders.findOneAndUpdate({ _id: id }, updated, { new: true });
+        if (!updatedRemainder) {
+            return res.status(404).json({ error: 'Remainder not found' });
         }
         res.status(200).json(updatedRemainder)
-    } catch(err){
+    } catch (err) {
         console.log(err)
-        res.status(500).json({error: "Internal server error"})
+        res.status(500).json({ error: "Internal server error" })
     }
 })
 
@@ -246,15 +274,15 @@ geteachTransaction.get('/get/:id', async (req, res) => {
     }
 });
 
-deleteTransaction.delete('/deleteremainders/:id', async(req, res)=>{
-    try{
-        const {id} = req.params
-        const deleteRemainder = await Remainders.findOneAndDelete({_id: id})
-        if(!deleteRemainder){
+deleteTransaction.delete('/deleteremainders/:id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const deleteRemainder = await Remainders.findOneAndDelete({ _id: id })
+        if (!deleteRemainder) {
             return res.status(404).json({ error: 'Remainder not found' });
         }
         res.status(200).json(deleteRemainder);
-    } catch(err){
+    } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Something went wrong' });
     }
@@ -270,7 +298,7 @@ deleteTransaction.delete('/delete/:id', async (req, res) => {
             return res.status(404).json({ error: 'Transaction not found' });
         }
         res.status(200).json(deleteTransaction);
-    } catch(err){
+    } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Something went wrong' });
     }
@@ -307,10 +335,5 @@ gusersRouter.post('/gusers', (req, res) => {
             res.status(500).send('Error finding user in MongoDB');
         });
 });
-
-
-
-
-
 
 module.exports = { signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter, getRemainders, postRemainders }
