@@ -1,4 +1,4 @@
-body{
+.bodyh{
     background-color: #4FCA98;
 }
 
@@ -34,7 +34,7 @@ nav{
     display: flex;
     align-items: center;
     justify-content: space-around;
-    height: 80vh;
+    height: 100vh;
 }
 
 .cartoon{
@@ -47,7 +47,6 @@ nav{
     align-items: center;
     justify-content: space-around;
     height: 100vh;
-
 }
 
 .aboutuscartoon{
@@ -57,6 +56,7 @@ nav{
 
 .aboutustext{
     color: white;
+    font-size: 1.5rem;
 }
 
 .aboutuschild{
@@ -73,16 +73,24 @@ nav{
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* border: 1px solid black; */
+    padding: 5px;
     margin: 10px;
-    padding: 10px;
-    color: black;
-    background-color: white;
     border-radius: 20px;
+    background-color: #000;
+}
+
+.featurescartoon{
+    width: 360px;
+    height: 300px;
 }
 
 .featurestext{
-    color: black;
+    color: #fff;
+}
+
+.featurestextp{
+    color: #fff;
+    font-size: 1.3rem;
 }
 
 .contacttext{
@@ -93,7 +101,7 @@ nav{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 100vh;
+    height: 120vh;
 }
 
 .contactuscartoon{
@@ -113,3 +121,30 @@ nav{
     max-width: 1200px;
     margin: 0 auto;
 }
+
+.social-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+/* .dash{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+}
+
+.navdash{
+    width: 20%;
+    background-color: #000;
+    border: 2px solid red;
+    display: flex;
+    flex-direction: column;
+}
+
+.second {
+    width: 80%;
+    background-color: white;
+} */
