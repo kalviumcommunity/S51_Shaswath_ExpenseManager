@@ -8,6 +8,7 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const multer = require('multer')
 const { storeUserInCache, getCachedUser, getCachedRemainders, storeRemaindersInCache, storeTransactioInCache, getCachedTransactions } = require('../redisClient')
+const nodemailer = require('nodemailer')
 
 
 const signUpRouter = express.Router()
@@ -23,39 +24,83 @@ const getRemainders = express.Router()
 const postRemainders = express.Router()
 
 
+function generateRandomToken() {
+    const token = jwt.sign(
+        { data: "verificationToken" },
+        process.env.SECRET_KEY,
+        {
+            expiresIn: "1d",
+        }
+    );
+    return token;
+}
 
 // SignUP route
 signUpRouter.post("/signup", async (req, res) => {
     try {
-        const { name, username, email, password } = req.body
+        const { name, username, email, password } = req.body;
         if (!name || !username || !email || !password) {
-            return res.status(400).json({ Message: "Please enter all fields" })
+            return res.status(400).json({ message: "Please enter all fields" });
         }
-        let user = await User.findOne({ email })
+        let user = await User.findOne({ email });
 
         if (user) {
-            return res.status(400).json({ Message: "User already exists" })
+            return res.status(400).json({ message: "User already exists" });
         }
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        let newUser = await User.create({ name, username, email, password: hashedPassword })
+        let newUser = await User.create({
+            name,
+            username,
+            email,
+            password: hashedPassword,
+            verificationToken: generateRandomToken(),
+        });
 
-        // Create JWT token
-        const token = jwt.sign({ username: newUser.username }, process.env.SECRET_KEY);
-
-        // Store token in cookie
-        res.cookie('token', token, { httpOnly: true });
+        // Send verification email
+        await sendVerificationEmail(newUser.email, newUser.verificationToken);
 
         return res.status(200).json({
-            message: `Welcome, ${newUser.username}`,
+            message: `Welcome, ${newUser.email}`,
             user: newUser,
-            token
         });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }
-})
+});
+
+// Function to send verification email
+async function sendVerificationEmail(email, verificationToken) {
+    try {
+        // Create transporter using nodemailer
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.ADMIN_EMAIL,
+                pass: process.env.ADMIN_PASS,
+            },
+        });
+
+        // Construct email message
+        // Construct email message with HTML content
+        const mailOptions = {
+            from: "shaswathgiridhran@gmail.com",
+            to: email,
+            subject: "Account Verification",
+            html: `
+      <p>Please click the following button to verify your email address:</p>
+      <a href="https://expense-vault.netlify.app/" style="background-color: #4CAF50; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 10px;">Verify Email</a>
+    `,
+        };
+
+        // Send email
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error("Error sending verification email:", error);
+        // Handle error appropriately
+    }
+}
 
 
 LoginRouter.post('/login', async (req, res) => {
