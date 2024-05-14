@@ -7,15 +7,8 @@ const bodyParser = require('body-parser');
 const { signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter, getRemainders, postRemainders } = require('./routes/routes')
 const cookieParser = require('cookie-parser')
 const multer = require("multer");
-const path = require("path");
-const fs = require('fs');
-
-// const Image = require('./models/image.model')
-// const jwt = require('jsonwebtoken');
-const Transaction = require('./models/transaction.model')
 
 
-const upload = multer();
 const app = express();
 app.use(cors());
 app.use(express.json());

@@ -8,6 +8,7 @@ import feature1 from '../assets/feature1.png'
 import feature2 from '../assets/feature2.png'
 import feature3 from '../assets/feature3.png'
 import contact from '../assets/contact.png'
+import Main from './Mainx'
 
 import { FacebookOutlined } from '@mui/icons-material';
 import { Twitter } from '@mui/icons-material';
@@ -28,10 +29,17 @@ function Homex({ isLoggedIn, handleLogout, remindMe, userId }) {
 
     useEffect(() => {
         document.body.classList.add('bodyh');
+        if(isLoggedIn){
+            document.body.classList.add('bodyl')
+        }
+        else{
+            document.body.classList.remove('bodyl')
+        }
         return () => {
             document.body.classList.remove('bodyh');
         };
-    }, []);
+    }, [isLoggedIn]);
+    
 
     const aboutScrollRef = useRef(null)
     const featureScrollRef = useRef(null)
@@ -54,6 +62,7 @@ function Homex({ isLoggedIn, handleLogout, remindMe, userId }) {
             contactScrollRef.current.scrollIntoView({ behavior: 'smooth' })
         }
     }
+
 
     return (
         <>
@@ -140,7 +149,7 @@ function Homex({ isLoggedIn, handleLogout, remindMe, userId }) {
                     </div>
                 </>
             ) : (
-                <div className='dash'>
+                <>
                     <nav className='navdash'>
                         <Link to='/form'><button className='navbtn'>Add Transaction</button></Link>
                         <Link to='/rem'><button className='navbtn'>Remainders</button></Link>
@@ -150,9 +159,9 @@ function Homex({ isLoggedIn, handleLogout, remindMe, userId }) {
                         <ToastContainer />
                     </nav>
                     <div className='second'>
-                        Content
+                        <Main/>
                     </div>
-                </div>
+                </>
             )}
         </>
     )

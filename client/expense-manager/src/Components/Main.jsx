@@ -58,7 +58,10 @@ export default function Main() {
 
     const fetchTransaction = async () => {
         try {
-            const res = await fetch("https://expensemanager-2t8j.onrender.com/get");
+            const res = await fetch("http://localhost:7777/get");
+            if (!res.ok) {
+                throw new Error('Failed to fetch data');
+            }
             const data = await res.json();
             console.log(data);
             setData(data);
@@ -66,6 +69,7 @@ export default function Main() {
             console.log(err);
         }
     };
+    
 
     const handleAddNewTransaction = () => {
         setShowForm(true);
