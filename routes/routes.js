@@ -212,7 +212,7 @@ getTransaction.get("/get", async (req, res) => {
         const cachedTransactions = await getCachedTransactions();
         if (cachedTransactions) {
             console.log('Serving transactions from cache');
-            return res.status(200).json(JSON.parse(cachedTransactions));
+            return res.status(200).json(cachedTransactions); // Error occurs here
         }
 
         // If not cached, fetch from database
@@ -226,6 +226,7 @@ getTransaction.get("/get", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 
 editTransaction.patch("/patchremainders/:id", async (req, res) => {

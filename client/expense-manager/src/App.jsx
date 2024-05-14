@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import Home from './Components/Home';
 import './index.css';
 import Edit from './Components/Edit';
 import Overview from './Components/Overview';
@@ -46,7 +45,7 @@ function App() {
   };
 
   return (
-    <UserIdContext.Provider value={userId}> {/* 2. Provide userId context */}
+    <UserIdContext.Provider value={userId}> 
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Homex userId={userId} remindMe={remindMe} setRemindMe={setRemindMe} isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
@@ -54,13 +53,11 @@ function App() {
           <Route path='/edit/:id' element={<Edit />} />
           <Route path='/overview/:userId' element={<Overview />} />
           <Route path='form' element={<TransactionForm/>} />
-          {/* 3. Pass userId as a prop to the Image component */}
           <Route path='/images' element={<Image userId={userId} />} />
           <Route path='/rem' element={<Remainders remindMe={remindMe} setRemindMe={setRemindMe} userId={userId} />}></Route>
         </Routes>
       </BrowserRouter>
     </UserIdContext.Provider>
-    // <Homex/>
   );
 }
 
@@ -70,3 +67,106 @@ function useUserId() {
 }
 
 export default App;
+
+// import React, { useState } from 'react';
+// import nlp from 'compromise';
+
+// const TransactionForm = () => {
+//     const [userText, setUserText] = useState('');
+//     const [transactionInfo, setTransactionInfo] = useState({
+//         title: "Transaction",
+//         date: new Date(),
+//         amount: 0,
+//         category: "Others", // Default category
+//         description: "",
+//         mode: "Unknown"
+//     });
+
+//     const handleUserTextChange = (event) => {
+//         setUserText(event.target.value);
+//     };
+
+//     const extractTransactionInfo = () => {
+//         const amountMatch = userText.match(/\d+(\.\d+)?/);
+//         const dateMatch = userText.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+
+//         const extractedInfo = {
+//             amount: amountMatch ? parseFloat(amountMatch[0]) : 0,
+//             date: dateMatch ? new Date(`${dateMatch[3]}-${dateMatch[1]}-${dateMatch[2]}`) : new Date()
+//         };
+
+//         // Extract mode based on keywords for "credited" and "debited"
+//         const creditKeywords = ['received', 'credited'];
+//         const debitKeywords = ['paid', 'spent', 'bought'];
+//         let mode = "Unknown";
+
+//         creditKeywords.forEach(keyword => {
+//             if (userText.toLowerCase().includes(keyword)) {
+//                 mode = "Credited";
+//             }
+//         });
+
+//         debitKeywords.forEach(keyword => {
+//             if (userText.toLowerCase().includes(keyword)) {
+//                 mode = "Debited";
+//             }
+//         });
+
+//         extractedInfo.mode = mode;
+
+//         // Extract category and generate title based on predefined options
+//         const categories = {
+//             Food: "Food Expense",
+//             Transportation: "Transportation Expense",
+//             Shopping: "Shopping Expense",
+//             Utilities: "Utilities Expense",
+//             Rent: "Rent Expense",
+//             Healthcare: "Healthcare Expense",
+//             Entertainment: "Entertainment Expense",
+//             Education: "Education Expense",
+//             Travel: "Travel Expense",
+//             Salary: "Salary Income",
+//             Others: "Other Expense"
+//         };
+        
+//         const doc = nlp(userText.toLowerCase());
+//         const keywords = doc.nouns().out('array');
+
+//         Object.keys(categories).forEach(category => {
+//             if (keywords.includes(category.toLowerCase())) {
+//                 extractedInfo.category = category;
+//                 extractedInfo.title = categories[category];
+//             }
+//         });
+
+//         setTransactionInfo({ ...transactionInfo, ...extractedInfo });
+//     };
+
+//     const handleSubmit = (event) => {
+//         event.preventDefault();
+//         extractTransactionInfo();
+//     };
+
+//     return (
+//         <div>
+//             <form onSubmit={handleSubmit}>
+//                 <label>
+//                     Enter transaction details:
+//                     <input type="text" value={userText} onChange={handleUserTextChange} />
+//                 </label>
+//                 <button type="submit">Extract Info</button>
+//             </form>
+//             <div>
+//                 <h2>Extracted Transaction Info:</h2>
+//                 <p>Amount: {transactionInfo.amount}</p>
+//                 <p>Date: {transactionInfo.date.toLocaleDateString()}</p>
+//                 <p>Mode: {transactionInfo.mode}</p>
+//                 <p>Category: {transactionInfo.category}</p>
+//                 <p>Title: {transactionInfo.title}</p>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default TransactionForm;
+
