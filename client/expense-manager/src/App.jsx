@@ -9,6 +9,7 @@ import Remainders from './Components/Remainders';
 import Login from './Components/Login'
 import TransactionForm from './Components/TransactionForm';
 import Homex from './Components/Homex';
+import Email from './Components/Email';
 
 // 1. Create a context
 const UserIdContext = createContext();
@@ -52,8 +53,9 @@ function App() {
           <Route path='/signup' element={<Login handleLogin={handleLogin} />} />
           <Route path='/edit/:id' element={<Edit />} />
           <Route path='/overview/:userId' element={<Overview />} />
-          <Route path='form' element={<TransactionForm/>} />
+          <Route path='/form' element={<TransactionForm/>} />
           <Route path='/images' element={<Image userId={userId} />} />
+          <Route path='/verification' element={<Email />} />
           <Route path='/rem' element={<Remainders remindMe={remindMe} setRemindMe={setRemindMe} userId={userId} />}></Route>
         </Routes>
       </BrowserRouter>

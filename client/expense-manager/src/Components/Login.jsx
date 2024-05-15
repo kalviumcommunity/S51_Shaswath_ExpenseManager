@@ -96,12 +96,12 @@ const YourComponent = ({handleLogin}) => {
                     password: signupPassword
                 });
                 if (response.status === 200) {
+                    navigate('/verification');
                     const { token } = response.data;
                     document.cookie = `token=${token}; path=/;`;
                     document.cookie = `id=${response.data.user._id}`;
                     alert('Signup successful! Please login.');
                     handleLogin();
-                    navigate('/');
                 }
             }
         } catch (error) {

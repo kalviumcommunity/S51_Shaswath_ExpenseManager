@@ -38,7 +38,7 @@ function generateRandomToken() {
 // SignUP route
 signUpRouter.post("/signup", async (req, res) => {
     try {
-        const { name, username, email, password } = req.body;
+        const { name, username, email, password, verified } = req.body;
         if (!name || !username || !email || !password) {
             return res.status(400).json({ message: "Please enter all fields" });
         }
@@ -55,11 +55,12 @@ signUpRouter.post("/signup", async (req, res) => {
             username,
             email,
             password: hashedPassword,
+            verified,
             verificationToken: generateRandomToken(),
         });
 
         // Send verification email
-        await sendVerificationEmail(newUser.email, newUser.verificationToken);
+        await sendVerificationEmail(newUser.email, newUser.verificationToken, newUser._id);
 
         return res.status(200).json({
             message: `Welcome, ${newUser.email}`,
@@ -71,7 +72,7 @@ signUpRouter.post("/signup", async (req, res) => {
 });
 
 // Function to send verification email
-async function sendVerificationEmail(email, verificationToken) {
+async function sendVerificationEmail(email, verificationToken, id) {
     try {
         // Create transporter using nodemailer
         const transporter = nodemailer.createTransport({
@@ -84,13 +85,16 @@ async function sendVerificationEmail(email, verificationToken) {
 
         // Construct email message
         // Construct email message with HTML content
+        // const url = `https://expense-vault.netlify.app/${id}/verification`
+        const url = `http://localhost:5173/`
+
         const mailOptions = {
             from: "shaswathgiridhran@gmail.com",
             to: email,
             subject: "Account Verification",
             html: `
-      <p>Please click the following button to verify your email address:</p>
-      <a href="https://expense-vault.netlify.app/" style="background-color: #4CAF50; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 10px;">Verify Email</a>
+        <p>Please click the following button to verify your email address:</p>
+        <a href="${url}" style="background-color: #4CAF50; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 10px;">Verify Email</a>
     `,
         };
 
@@ -101,6 +105,24 @@ async function sendVerificationEmail(email, verificationToken) {
         // Handle error appropriately
     }
 }
+
+
+getTransaction.get("/verification", async (req, res) => {
+    try {
+        // Assuming you're passing user ID as a query parameter named 'id'
+        const userId = req.query.id;
+        if (!userId) return res.status(400).send({ message: "User ID is required" });
+
+        const user = await User.findByIdAndUpdate(userId, { verified: true }, { new: true });
+        if (!user) return res.status(400).send({ message: "Invalid user ID" });
+
+        res.status(200).send({ message: "Email verified successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Internal Server Error" });
+    }
+});
+
 
 
 LoginRouter.post('/login', async (req, res) => {
@@ -124,6 +146,12 @@ LoginRouter.post('/login', async (req, res) => {
         if (!user) {
             return res.status(400).json({ Message: "User not found" });
         }
+
+        // Check if the user is verified
+        if (!user.verified) {
+            return res.status(400).json({ Message: "User is not verified" });
+        }
+
         const passwordCheck = await bcrypt.compare(password, user.password);
         if (!passwordCheck) {
             return res.status(400).json({ Message: "Invalid Username or password" });
