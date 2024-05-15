@@ -85,7 +85,7 @@ async function sendVerificationEmail(email, verificationToken, id) {
 
         // Construct email message
         // Construct email message with HTML content
-        const url = `https://expense-vault.netlify.app/${id}/verification`
+        const url = "https://expense-vault.netlify.app/verification"
         // const url = `http://localhost:5173/`
 
         const mailOptions = {
