@@ -12,19 +12,17 @@ function Email() {
 
     const verifyEmail = async () => {
         try {
-            // const url = `http://localhost:7777/verification`
+            // const url = "http://localhost:7777/verification"
             const url = `https://expensemanager-2t8j.onrender.com/verification`
-
             const { data } = await axios.get(url)
             console.log(data)
             setValid(true)
-
-
-        } catch { err } {
+        } catch (err) { // Fix the syntax error here
             console.log(err)
             setValid(false)
         }
     }
+    
 
     return (
         <>
