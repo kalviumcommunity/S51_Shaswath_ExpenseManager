@@ -94,7 +94,7 @@ async function sendVerificationEmail(email, verificationToken, id) {
             subject: "Account Verification",
             html: `
         <p>Please click the following button to verify your email address:</p>
-        <a href="${url}" style="background-color: #4CAF50; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 10px;">Verify Email</a>
+        <a href="${url}" target="_parent" style="background-color: #4CAF50; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 10px;">Verify Email</a>
     `,
         };
 
@@ -109,12 +109,11 @@ async function sendVerificationEmail(email, verificationToken, id) {
 
 getTransaction.get("/verification", async (req, res) => {
     try {
-        // Assuming you're passing user ID as a query parameter named 'id'
-        const userId = req.query.id;
-        if (!userId) return res.status(400).send({ message: "User ID is required" });
+        const user = await User.findOneAndUpdate({ verified: false }, { verified: true }, { new: true });
 
-        const user = await User.findByIdAndUpdate(userId, { verified: true }, { new: true });
-        if (!user) return res.status(400).send({ message: "Invalid user ID" });
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
 
         res.status(200).send({ message: "Email verified successfully" });
     } catch (error) {
