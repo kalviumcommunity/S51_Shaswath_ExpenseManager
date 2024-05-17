@@ -96,7 +96,7 @@ const YourComponent = ({handleLogin}) => {
                     password: signupPassword
                 });
                 if (response.status === 200) {
-                    navigate('/verification');
+                    navigate('/verifi');
                     const { token } = response.data;
                     document.cookie = `token=${token}; path=/;`;
                     document.cookie = `id=${response.data.user._id}`;

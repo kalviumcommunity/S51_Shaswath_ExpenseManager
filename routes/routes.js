@@ -60,7 +60,7 @@ signUpRouter.post("/signup", async (req, res) => {
         });
 
         // Send verification email
-        await sendVerificationEmail(newUser.email, newUser.verificationToken, newUser._id);
+        await sendVerificationEmail(newUser.email, newUser.verificationToken, newUser._id, newUser.verified);
 
         return res.status(200).json({
             message: `Welcome, ${newUser.email}`,
@@ -72,7 +72,7 @@ signUpRouter.post("/signup", async (req, res) => {
 });
 
 // Function to send verification email
-async function sendVerificationEmail(email, verificationToken, id) {
+async function sendVerificationEmail(email, verificationToken, id, verified) {
     try {
         // Create transporter using nodemailer
         const transporter = nodemailer.createTransport({
@@ -85,8 +85,8 @@ async function sendVerificationEmail(email, verificationToken, id) {
 
         // Construct email message
         // Construct email message with HTML content
-        const url = `https://expense-vault.netlify.app/`
-        // const url = `http://localhost:5173/`
+        const url = `https://expense-vault.netlify.app/verification`
+        // const url = "http://localhost:5173/verification"
 
         const mailOptions = {
             from: "shaswathgiridhran@gmail.com",
