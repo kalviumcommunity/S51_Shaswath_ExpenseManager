@@ -252,11 +252,22 @@ transactionRouter.post("/add", authenticateToken, upload.single('image'), async 
             user,
             imageUrl, // Store the image URL in the transaction document
         });
+
+        // Associate this transaction with the corresponding user and update the user's transactions array
+        const currentUser = await User.findById(user);
+        if (!currentUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        currentUser.transactions.push(newTransaction); // Push the new transaction to the user's transactions array
+        await currentUser.save(); // Save the user document with the updated transactions array
+
         return res.status(200).json({ message: "Transaction added successfully", transaction: newTransaction });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }
 });
+
+
 
 getRemainders.get("/getremainders", async (req, res) => {
     try {
@@ -281,11 +292,6 @@ getRemainders.get("/getremainders", async (req, res) => {
 // Getting transactions
 getTransaction.get("/get", async (req, res) => {
     try {
-        const cachedTransactions = await getCachedTransactions();
-        if (cachedTransactions) {
-            console.log('Serving transactions from cache');
-            return res.status(200).json(cachedTransactions); // Error occurs here
-        }
 
         // If not cached, fetch from database
         const transactions = await Transaction.find();
@@ -336,7 +342,7 @@ editTransaction.patch("/patch/:id", async (req, res) => {
 geteachTransaction.get('/get/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const transaction = await Transaction.findOne({ _id: id });
+        const transaction = await User.findOne({ _id: id });
         if (!transaction) {
             return res.status(404).json({ error: 'transaction not found' });
         }

@@ -1,9 +1,11 @@
 {
   "dependencies": {
     "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.13",
-    "@mui/material": "^5.15.13",
+    "@mui/material": "^5.15.18",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/x-charts": "^7.5.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -23,6 +25,7 @@
     "react": "^18.2.0",
     "react-social-login-buttons": "^4.1.0",
     "reactjs-social-login": "^2.6.3",
-    "redis": "^4.6.13"
+    "redis": "^4.6.13",
+    "styled-components": "^6.1.11"
   }
 }
