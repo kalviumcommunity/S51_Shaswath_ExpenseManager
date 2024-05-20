@@ -8,7 +8,8 @@ import feature1 from '../assets/feature1.png'
 import feature2 from '../assets/feature2.png'
 import feature3 from '../assets/feature3.png'
 import contact from '../assets/contact.png'
-import Main from './Mainx'
+import Mainx from './Mainx'
+import Main from './Main'
 
 import { FacebookOutlined } from '@mui/icons-material';
 import { Twitter } from '@mui/icons-material';
@@ -149,8 +150,8 @@ function Homex({ isLoggedIn, handleLogout, remindMe, userId }) {
                     </div>
                 </>
             ) : (
-                <>
-                    <nav className='navdash'>
+                <div className='flexx'>
+                <nav className='navdash'>
                         <Link to='/form'><button className='navbtn'>Add Transaction</button></Link>
                         <Link to='/rem'><button className='navbtn'>Remainders</button></Link>
                         <Link to={`/overview/${userId}`}><button className='navbtn'>Overview</button></Link>
@@ -159,9 +160,9 @@ function Homex({ isLoggedIn, handleLogout, remindMe, userId }) {
                         <ToastContainer />
                     </nav>
                     <div className='second'>
-                        <Main/>
+                        <Mainx userId={userId}/>
                     </div>
-                </>
+                </div>
             )}
         </>
     )

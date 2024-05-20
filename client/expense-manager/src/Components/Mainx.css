@@ -1,0 +1,38 @@
+.mainx-body{
+    background-color: white;
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-between;
+    width: 70vw;
+    height: 100vh;
+
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 15px;
+    text-align: center;
+}
+
+td::first-letter {
+    text-transform: uppercase;
+}
+
+th {
+    background-color: transparent;
+}
+.credit {
+    color: #4FCA98; /* Or any other color for credit transactions */
+}
+
+.debit {
+    color: red; /* Or any other color for debit transactions */
+}
+
+.recent{
+    color: black;
+}
