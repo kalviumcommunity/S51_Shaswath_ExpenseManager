@@ -1,14 +1,21 @@
 .mainx-body{
     background-color: white;
-    display: flex;
-    /* align-items: center; */
-    justify-content: space-between;
     width: 70vw;
     height: 100vh;
+    border-radius: 20px;
+    padding: 5px;
+}
 
+.mainx-content{
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
 }
 
 table {
+    display: flex;
+    align-content: center;
+    justify-content: space-evenly;
     width: 100%;
     border-collapse: collapse;
 }
@@ -22,17 +29,39 @@ td::first-letter {
     text-transform: uppercase;
 }
 
-th {
-    background-color: transparent;
-}
 .credit {
-    color: #4FCA98; /* Or any other color for credit transactions */
+    color: #4FCA98;
+    font-weight: bold; 
 }
 
 .debit {
-    color: red; /* Or any other color for debit transactions */
+    color: red;
+    font-weight: bold; 
 }
 
 .recent{
     color: black;
+}
+.overview-main{
+    /* border: 2px solid red; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.overview-main div{
+    width: 200px;
+    display: flex;
+    
+}
+
+.overview-main div div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.overview-section{
+    min-width: 935px;
+    /* border: 2px solid red; */
 }
