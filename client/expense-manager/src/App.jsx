@@ -53,7 +53,7 @@ function App() {
           <Route path='/' element={<Homex userId={userId} remindMe={remindMe} setRemindMe={setRemindMe} isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
           <Route path='/signup' element={<Login handleLogin={handleLogin} />} />
           <Route path='/edit/:id' element={<Edit />} />
-          <Route path='/overview/:userId' element={<Overview />} />
+          {/* <Route path='/overview/:userId' element={<Overview userId={userId}/>} /> */}
           <Route path='/form' element={<TransactionForm/>} />
           <Route path='/images' element={<Image userId={userId} />} />
           <Route path='/verification' element={<Email />} />

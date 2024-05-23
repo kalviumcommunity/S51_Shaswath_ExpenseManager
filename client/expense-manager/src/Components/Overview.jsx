@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import Income from '../assets/income.png';
+import Expenses from '../assets/expenses.png';
+import Debt from '../assets/debt.png'
 
-export default function Overview() {
+export default function Overview({ userId }) {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
-    const { userId } = useParams();
 
     useEffect(() => {
         fetchTransaction();
@@ -26,36 +27,39 @@ export default function Overview() {
         return <p>Error: {error.message}</p>;
     }
 
-    console.log("userId:", userId); // Log userId
-    console.log("data:", data);     // Log fetched data
-
-    
     const debitTransactions = data.filter(transaction => transaction.user === userId && transaction.mode === 'Debit');
     const creditTransactions = data.filter(transaction => transaction.user === userId && transaction.mode === 'Credit');
-
 
     const totalDebitAmount = debitTransactions.reduce((acc, curr) => acc + curr.amount, 0);
     const totalCreditAmount = creditTransactions.reduce((acc, curr) => acc + curr.amount, 0);
 
     return (
-        <>
+        <div className='overview-main'>
             <div>
-                <h1>Debit Transactions:</h1>
-                <p>No of Transactions: {debitTransactions.length}</p>
-                <p>Total Amount: {totalDebitAmount}</p>
+                <img src={Expenses} alt="Income" />
+                {/* <p>No of Transactions: {debitTransactions.length}</p> */}
+                <div>
+                <h4>Expense</h4>
+                <h4>{totalDebitAmount}</h4>
+                </div>
             </div>
             <div>
-                <h1>Credit Transactions:</h1>
-                <p>No of Transactions: {creditTransactions.length}</p>
-                <p>Total Amount: {totalCreditAmount}</p>
+                <img src={Income} alt="Expenses" />
+                {/* <p>No of Transactions: {creditTransactions.length}</p> */}
+                <div>
+                <h4>Income</h4>
+                <h4>{totalCreditAmount}</h4>
+                </div>
             </div>
             <div>
-                <h1>Summary:</h1>
-                <p>Amount spent: {totalDebitAmount}</p>
-                <p>Amount received: {totalCreditAmount}</p>
-                <p>Balance: {totalCreditAmount - totalDebitAmount}</p>
+                <img src={Debt} alt="Expenses" />
+                {/* <p>Amount spent: {totalDebitAmount}</p> */}
+                {/* <p>Amount received: {totalCreditAmount}</p> */}
+                <div>
+                <h4>Balance</h4>
+                <h4>{totalCreditAmount - totalDebitAmount}</h4>
+                </div>
             </div>
-        </>
+        </div>
     );
-    
 }
