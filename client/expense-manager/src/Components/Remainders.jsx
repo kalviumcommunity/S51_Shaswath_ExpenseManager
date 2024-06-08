@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-function Remainders({ userId, remindMe, setRemindMe }) {
+function Remainders({ userId }) {
     const [remainders, setRemainders] = useState([]);
     const [formData, setFormData] = useState({
         title: '',
@@ -113,22 +113,22 @@ function Remainders({ userId, remindMe, setRemindMe }) {
         }
     };
 
-    const handleRemind = () => {
-        const today = new Date().toISOString().slice(0, 10);
-        console.log(today); // Log today's date for reference
+    // const handleRemind = () => {
+    //     const today = new Date().toISOString().slice(0, 10);
+    //     console.log(today); // Log today's date for reference
 
-        const userReminders = remainders.filter(item => item.user === userId);
-        console.log(userReminders.map(item => item.date)); // Log dates for the user
+    //     const userReminders = remainders.filter(item => item.user === userId);
+    //     console.log(userReminders.map(item => item.date)); // Log dates for the user
 
-        const remindersToday = userReminders.filter(item => item.date.slice(0, 10) === today);
-        console.log(remindersToday.map(item => item.date)); // Log dates that match today's date for the user
+    //     const remindersToday = userReminders.filter(item => item.date.slice(0, 10) === today);
+    //     console.log(remindersToday.map(item => item.date)); // Log dates that match today's date for the user
 
-        if (remindersToday.length > 0) {
-            setRemindMe(true);
-        } else {
-            setRemindMe(false);
-        }
-    }
+    //     if (remindersToday.length > 0) {
+    //         setRemindMe(true);
+    //     } else {
+    //         setRemindMe(false);
+    //     }
+    // }
 
 
 

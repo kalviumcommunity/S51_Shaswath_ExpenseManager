@@ -18,7 +18,7 @@ const UserIdContext = createContext();
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
-  const [remindMe, setRemindMe] = useState(false); // State to track reminders
+  // const [remindMe, setRemindMe] = useState(false); 
 
 
 
@@ -50,7 +50,7 @@ function App() {
     <UserIdContext.Provider value={userId}> 
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Homex userId={userId} remindMe={remindMe} setRemindMe={setRemindMe} isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
+          <Route path='/' element={<Homex userId={userId} isLoggedIn={isLoggedIn} handleLogout={handleLogout} />} />
           <Route path='/signup' element={<Login handleLogin={handleLogin} />} />
           <Route path='/edit/:id' element={<Edit />} />
           {/* <Route path='/overview/:userId' element={<Overview userId={userId}/>} /> */}
@@ -58,7 +58,7 @@ function App() {
           <Route path='/images' element={<Image userId={userId} />} />
           <Route path='/verification' element={<Email />} />
           <Route path='/verifi' element={<Verifi />} />
-          <Route path='/rem' element={<Remainders remindMe={remindMe} setRemindMe={setRemindMe} userId={userId} />}></Route>
+          <Route path='/rem' element={<Remainders userId={userId} />}></Route>
         </Routes>
       </BrowserRouter>
     </UserIdContext.Provider>

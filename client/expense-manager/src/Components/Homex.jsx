@@ -14,19 +14,12 @@ import Main from './Main'
 import { FacebookOutlined } from '@mui/icons-material';
 import { Twitter } from '@mui/icons-material';
 import { Instagram } from '@mui/icons-material';
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
 
 
 
-function Homex({ isLoggedIn, handleLogout, remindMe, userId }) {
-    useEffect(() => {
-        if (remindMe) {
-            console.log('Reminder Alerted !!!!');
-            console.log(remindMe)
-            toast.info('Reminder is due today');
-        }
-    }, [remindMe]);
+
+function Homex({ isLoggedIn, handleLogout, userId }) {
+    
 
     useEffect(() => {
         document.body.classList.add('bodyh');
@@ -157,7 +150,7 @@ function Homex({ isLoggedIn, handleLogout, remindMe, userId }) {
                         <Link to={`/overview/${userId}`}><button className='navbtn'>Overview</button></Link>
                         {/* <button className='navbtn'>Contact us</button> */}
                         <button onClick={handleLogout} className='navbtn'>Logout</button>
-                        <ToastContainer />
+                        
                     </nav>
                     <div className='second'>
                         <Mainx userId={userId}/>
