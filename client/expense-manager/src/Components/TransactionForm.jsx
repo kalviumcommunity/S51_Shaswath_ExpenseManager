@@ -83,27 +83,28 @@ const TransactionForm = () => {
     navigate('/')
   }
   return (
-    <div className="register">
-      <form onSubmit={handleSubmit}>
+    <div className="registerT">
+    <h2 className="form-heading">Add Transaction</h2>
+      <form onSubmit={handleSubmit} className="form-container">
 
-        <div className="input-group">
-          <label>Title</label>
-          <input type="text" id="title" name="title" placeholder="Title" required value={formData.title} onChange={handleChange} />
+        <div className="input-groupR">
+          <label className="form-label">Title</label>
+          <input type="text" id="title" name="title" placeholder="Title" className="form-input" required value={formData.title} onChange={handleChange} />
         </div>
 
-        <div className="input-group">
-          <label>Date</label>
-          <input type="date" id="date" name="date" placeholder="Date" required value={formData.date} onChange={handleChange} />
+        <div className="input-groupR">
+          <label className="form-label">Date</label>
+          <input type="date" id="date" name="date" placeholder="Date" required className="form-input" value={formData.date} onChange={handleChange} />
         </div>
 
-        <div className="input-group">
-          <label>Amount</label>
-          <input type="number" id="amount" name="amount" placeholder="Amount" required value={formData.amount} onChange={handleChange} />
+        <div className="input-groupR">
+          <label className="form-label">Amount</label>
+          <input type="number" id="amount" name="amount" className="form-input" placeholder="Amount" required value={formData.amount} onChange={handleChange} />
         </div>
 
-        <div className="input-group">
-          <label>Category</label>
-          <select className='select' id="category" name="category" value={formData.category} required onChange={handleChange}>
+        <div className="input-groupR">
+          <label className="form-label">Category</label>
+          <select className="form-input" id="category" name="category" value={formData.category} required onChange={handleChange}>
             <option value="">Select category</option>
             <option value="Food">Food</option>
             <option value="Transportation">Transportation</option>
@@ -119,26 +120,26 @@ const TransactionForm = () => {
           </select>
         </div>
 
-        <div className="input-group">
-          <label>Description</label>
-          <input type="text" id="description" name="description" value={formData.description} onChange={handleChange} placeholder="Description" />
+        <div className="input-groupR">
+          <label className="form-label">Description</label>
+          <input type="text" id="description" className="form-input" name="description" value={formData.description} onChange={handleChange} placeholder="Description" />
         </div>
 
-        <div className="input-group">
-          <label>Type</label>
-          <select className='select' id="mode" name="mode" value={formData.mode} required onChange={handleChange}>
+        <div className="input-groupR">
+          <label className="form-label">Type</label>
+          <select className="form-input" id="mode" name="mode" value={formData.mode} required onChange={handleChange}>
             <option value="">Select type</option>
             <option value="Credit">Credit</option>
             <option value="Debit">Debit</option>
           </select>
         </div>
 
-        <div className="input-group">
-          <label>Image</label>
-          <input type="file" id="image" name="image" onChange={handleImageChange} accept="image/*" />
+        <div className="input-groupR">
+          <label className="form-label">Image</label>
+          <input className="form-input" type="file" id="image" name="image" onChange={handleImageChange} accept="image/*" />
         </div>
-        <button type="submit" id='button'>Submit</button>
-        <button type="button" id='button' onClick={onClose}>Close</button>
+        <button type="submit" className="form-button" id='button'>Submit</button>
+        <button type="button" className="form-button" id='button' onClick={onClose}>Close</button>
         {error && <p className="error-message">{error}</p>}
       </form>
     </div>

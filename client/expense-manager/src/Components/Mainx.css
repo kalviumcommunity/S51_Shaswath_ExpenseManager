@@ -12,7 +12,7 @@
     grid-template-columns: repeat(2, 1fr);
 }
 
-table {
+.mainx-table {
     display: flex;
     align-content: center;
     justify-content: space-evenly;
