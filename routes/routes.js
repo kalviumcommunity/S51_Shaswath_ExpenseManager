@@ -335,36 +335,36 @@ deleteTransaction.delete('/delete/:id', async (req, res) => {
     }
 })
 
-gusersRouter.post('/gusers', (req, res) => {
+gusersRouter.post('/gusers', async (req, res) => {
     const userData = req.body;
     const { email } = userData;
 
-    // Check if user already exists
-    GUser.findOne({ email })
-        .then(existingUser => {
-            if (existingUser) {
-                // User already exists, return existing user data
-                const token = jwt.sign({ userId: existingUser._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-                res.status(200).json({ user: existingUser, token });
-            } else {
-                // User doesn't exist, create a new user
-                const newUser = new GUser(userData);
-                newUser.save()
-                    .then(savedUser => {
-                        console.log('User data saved to MongoDB:', savedUser);
-                        const token = jwt.sign({ userId: savedUser._id }, 'your_secret_key', { expiresIn: '1h' });
-                        res.status(200).json({ user: savedUser, token });
-                    })
-                    .catch(err => {
-                        console.error('Error saving user data to MongoDB:', err);
-                        res.status(500).send('Error saving user data to MongoDB');
-                    });
-            }
-        })
-        .catch(err => {
-            console.error('Error finding user in MongoDB:', err);
-            res.status(500).send('Error finding user in MongoDB');
-        });
+    try {
+        // Check if user already exists in GUser model
+        let existingGUser = await GUser.findOne({ email });
+        if (existingGUser) {
+            const token = jwt.sign({ userId: existingGUser._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+            return res.status(200).json({ user: existingGUser, token });
+        }
+
+        // Check if user already exists in User model
+        let existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists in the main user model" });
+        }
+
+        // User doesn't exist in either model, create a new GUser
+        const newUser = new GUser(userData);
+        let savedUser = await newUser.save();
+        console.log('User data saved to MongoDB:', savedUser);
+        const token = jwt.sign({ userId: savedUser._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        res.status(200).json({ user: savedUser, token });
+
+    } catch (err) {
+        console.error('Error handling user data in MongoDB:', err);
+        res.status(500).send('Error handling user data in MongoDB');
+    }
 });
+
 
 module.exports = { signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter, getRemainders, postRemainders }
