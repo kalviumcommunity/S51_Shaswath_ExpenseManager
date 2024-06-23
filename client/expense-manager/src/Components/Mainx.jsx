@@ -136,7 +136,7 @@ function Mainx({ userId }) {
 
                     <div className='recent-section'>
                         <h3 className='recent'>RECENT TRANSACTIONS</h3>
-                        <table>
+                        <table className='mainx-table'>
                             <tbody>
                                 {data.transactions && data.transactions.slice(-5).map(transaction => (
                                     <tr key={transaction._id}>

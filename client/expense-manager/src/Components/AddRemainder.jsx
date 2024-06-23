@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import './Remainders.css';
+import './TransactionForm.css'
 
-function Remainders({ userId }) {
+function AddRemainder({ userId }) {
     const [remainders, setRemainders] = useState([]);
     const [formData, setFormData] = useState({
         title: '',
@@ -131,70 +129,35 @@ function Remainders({ userId }) {
         setShowModal(false);
         setEditIndex(null);
     };
-
     return (
-        <div className='remainder-body'>
-            {!showModal ? (
-                <>
-                <h1>Remainders</h1>
-                    <div>
-                        {remainders.filter(remainder => remainder.user === userId).length > 0 ? (
-                            <table className='remainder-table'>
-                                <tbody>
-                                    {remainders.map((remainder, index) => (
-                                        remainder.user === userId && (
-                                            <tr key={index}>
-                                                <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.title}</td>
-                                                <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{new Date(remainder.date).toLocaleDateString()}</td>
-                                                <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.amount}</td>
-                                                <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.mode}</td>
-                                                <td>
-                                                    <EditIcon className="action-button" onClick={() => handleEditRemainder(index)} />
-                                                    <DeleteIcon className="action-button" onClick={() => handleDeleteRemainder(remainder._id)} />
-                                                </td>
-                                            </tr>
-                                        )
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <p>No remainders</p>
-                        )}
-                    </div>
-
-                    <button  onClick={() => setShowModal(true)}>Add Remainder</button>
-                </>
-            ) : (
-                <div className="register">
-                    <h2 className="form-heading">{editIndex !== null ? 'Edit Reminder' : 'Add New Reminder'}</h2>
-                    <form onSubmit={handleAddRemainder} className="form-container">
-                        <div className="input-group">
-                            <label htmlFor="title" className="form-label">Title:</label>
-                            <input type="text" id="title" name="title" value={formData.title} onChange={handleInputChange} required className="form-input" />
-                        </div>
-                        <div className="input-group">
-                            <label htmlFor="date" className="form-label">Date:</label>
-                            <input type="date" id="date" name="date" value={formData.date} onChange={handleInputChange} required className="form-input" />
-                        </div>
-                        <div className="input-group">
-                            <label htmlFor="amount" className="form-label">Amount:</label>
-                            <input type="number" id="amount" name="amount" value={formData.amount} onChange={handleInputChange} required className="form-input" />
-                        </div>
-                        <div className="input-group">
-                            <label htmlFor="mode" className="form-label">Mode:</label>
-                            <select name="mode" value={formData.mode} onChange={handleInputChange} required className="form-input">
-                                <option value="">Select Type</option>
-                                <option value="Credit">Credit</option>
-                                <option value="Debit">Debit</option>
-                            </select>
-                        </div>
-                        <button type="submit" className="form-button">{editIndex !== null ? 'Save' : 'Add'}</button>
-                        <button type="button" onClick={handleCloseModal} className="form-button">Close</button>
-                    </form>
+        <div className="register">
+            <h2 className="form-heading">{editIndex !== null ? 'Edit Reminder' : 'Add New Reminder'}</h2>
+            <form onSubmit={handleAddRemainder} className="form-container">
+                <div className="input-groupR">
+                    <label htmlFor="title" className="form-label">Title:</label>
+                    <input type="text" id="title" name="title" value={formData.title} onChange={handleInputChange} required className="form-input" />
                 </div>
-            )}
+                <div className="input-groupR">
+                    <label htmlFor="date" className="form-label">Date:</label>
+                    <input type="date" id="date" name="date" value={formData.date} onChange={handleInputChange} required className="form-input" />
+                </div>
+                <div className="input-groupR">
+                    <label htmlFor="amount" className="form-label">Amount:</label>
+                    <input type="number" id="amount" name="amount" value={formData.amount} onChange={handleInputChange} required className="form-input" />
+                </div>
+                <div className="input-groupR">
+                    <label htmlFor="mode" className="form-label">Mode:</label>
+                    <select name="mode" value={formData.mode} onChange={handleInputChange} required className="form-input">
+                        <option value="">Select Type</option>
+                        <option value="Credit">Credit</option>
+                        <option value="Debit">Debit</option>
+                    </select>
+                </div>
+                <button type="submit" className="form-button">{editIndex !== null ? 'Save' : 'Add'}</button>
+                <button type="button" onClick={handleCloseModal} className="form-button">Close</button>
+            </form>
         </div>
-    );
+    )
 }
 
-export default Remainders;
+export default AddRemainder

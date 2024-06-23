@@ -1,20 +1,17 @@
-.register{
-    width: 550px;  
-    margin-left: auto;
-    margin-right: auto;
+/* .register{
+    background-color: white;
+    width: 70vw;
+    height: 100vh;
+    border-radius: 20px;
+    padding: 25px;
 }
-.register div{
+.input-groupR{
     display: flex;
-    align-items: center;
-    justify-content: space-between ;
+    justify-content: space-evenly;
 }
 .register label{
-    color: white;
-}
-.register div input{
-    /* border: 2px solid red; */
-    width: 400px;
-    height: 50px;
+    color: black;
+    font-weight: 800;
 }
 .register div select{
     width: 400px;
@@ -22,7 +19,12 @@
     border-radius: 10px ;
     outline: none;
 }
-.register button{
+
+ */
+
+ /* Remainders.css */
+
+.form-button{
     margin-bottom: 20px;
     cursor: pointer;
     width: 70%;
@@ -35,3 +37,72 @@
     outline: none;
 }
 
+.register {
+    background-color: white;
+    width: 70vw;
+    height: 100vh;
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.registerT{
+    background-color: white;
+    width: 70vw;
+    height: 140vh;
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-container {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.input-groupR {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+.form-button:hover {
+    background-color: #0056b3;
+}
+
+.form-button:last-child {
+    background-color: #6c757d;
+}
+
+.form-button:last-child:hover {
+    background-color: #5a6268;
+}

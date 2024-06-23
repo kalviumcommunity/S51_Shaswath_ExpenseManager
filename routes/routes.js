@@ -7,9 +7,7 @@ const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const multer = require('multer')
-const { storeUserInCache, getCachedUser, getCachedRemainders, storeRemaindersInCache, storeTransactioInCache, getCachedTransactions } = require('../redisClient')
 const nodemailer = require('nodemailer')
-
 
 const signUpRouter = express.Router()
 const LoginRouter = express.Router()
@@ -22,7 +20,6 @@ const deleteTransaction = express.Router()
 const gusersRouter = express.Router()
 const getRemainders = express.Router()
 const postRemainders = express.Router()
-
 
 function generateRandomToken() {
     const token = jwt.sign(
@@ -84,7 +81,6 @@ async function sendVerificationEmail(email, verificationToken, id, verified) {
         });
 
         // Construct email message
-        // Construct email message with HTML content
         const url = "https://expensevault.pages.dev/verification"
         // const url = "http://localhost:5173/verification"
 
@@ -93,19 +89,17 @@ async function sendVerificationEmail(email, verificationToken, id, verified) {
             to: email,
             subject: "Account Verification",
             html: `
-        <p>Please click the following button to verify your email address:</p>
-        <a href="${url}" target="_parent" style="background-color: #4CAF50; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 10px;">Verify Email</a>
-    `,
+                <p>Please click the following button to verify your email address:</p>
+                <a href="${url}" target="_parent" style="background-color: #4CAF50; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 10px;">Verify Email</a>
+            `,
         };
 
         // Send email
         await transporter.sendMail(mailOptions);
     } catch (error) {
         console.error("Error sending verification email:", error);
-        // Handle error appropriately
     }
 }
-
 
 getTransaction.get("/verification", async (req, res) => {
     try {
@@ -122,25 +116,10 @@ getTransaction.get("/verification", async (req, res) => {
     }
 });
 
-
-
 LoginRouter.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        // Check cache for user data
-        const cachedUser = await getCachedUser(username);
-        if (cachedUser) {
-            const token = jwt.sign({ userId: cachedUser._id }, process.env.SECRET_KEY);
-            res.cookie('token', token, { httpOnly: true });
-            return res.status(200).json({
-                message: `Welcome back, ${cachedUser.username}`,
-                user: cachedUser,
-                token
-            });
-        }
-
-        // If not cached, perform user lookup and password check
         let user = await User.findOne({ username });
         if (!user) {
             return res.status(400).json({ Message: "User not found" });
@@ -160,9 +139,6 @@ LoginRouter.post('/login', async (req, res) => {
         const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
         res.cookie('token', token, { httpOnly: true });
 
-        // Optionally store user data in cache for future requests
-        await storeUserInCache(user, username);
-
         return res.status(200).json({
             message: `Welcome back, ${user.username}`,
             user,
@@ -179,9 +155,6 @@ LogoutRouter.get("/logout", (req, res) => {
     res.send('Logout successful');
 });
 
-
-
-
 function authenticateToken(req, res, next) {
     let token = req.headers['authorization'];
     if (!token) return res.status(401).json({ message: 'Unauthorized' });
@@ -196,11 +169,9 @@ function authenticateToken(req, res, next) {
     });
 }
 
-
 postRemainders.post("/addremainders", async (req, res) => {
     try {
         const { date, title, amount, mode, user } = req.body;
-
 
         if (!title || !date || !amount || !mode) {
             return res.status(400).json({ message: "Please provide all required fields" });
@@ -219,7 +190,6 @@ postRemainders.post("/addremainders", async (req, res) => {
         return res.status(500).json({ success: false, message: err.message });
     }
 });
-
 
 const upload = multer();
 
@@ -267,22 +237,10 @@ transactionRouter.post("/add", authenticateToken, upload.single('image'), async 
     }
 });
 
-
-
 getRemainders.get("/getremainders", async (req, res) => {
     try {
-        const cachedRemainders = await getCachedRemainders();
-        if (cachedRemainders) {
-            console.log('Serving remainders from cache');
-            return res.status(200).json(cachedRemainders);
-        }
-
-        // If not cached, fetch from database
         const remainders = await Remainders.find();
         res.status(200).json(remainders);
-
-        // Optionally store remainders in cache for future requests
-        await storeRemaindersInCache(remainders);
     } catch (error) {
         console.error('Error retrieving remainders:', error);
         res.status(500).json({ message: error.message });
@@ -292,19 +250,13 @@ getRemainders.get("/getremainders", async (req, res) => {
 // Getting transactions
 getTransaction.get("/get", async (req, res) => {
     try {
-
-        // If not cached, fetch from database
         const transactions = await Transaction.find();
         res.status(200).json(transactions);
-
-        // Optionally store transactions in cache for future requests
-        await storeTransactioInCache(transactions)
     } catch (error) {
         console.error('Error retrieving transactions:', error);
         res.status(500).json({ message: error.message });
     }
 });
-
 
 
 editTransaction.patch("/patchremainders/:id", async (req, res) => {
