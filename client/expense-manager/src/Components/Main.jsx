@@ -5,8 +5,8 @@ import PieChartIcon from '@mui/icons-material/PieChart';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import "./Main.css";
-import TransactionForm from './TransactionForm';
+import './Main.css'
+
 
 
 
@@ -58,7 +58,7 @@ export default function Main() {
 
     const fetchTransaction = async () => {
         try {
-            const res = await fetch("http://localhost:7777/get");
+            const res = await fetch("https://expensemanager-2t8j.onrender.com/get");
             if (!res.ok) {
                 throw new Error('Failed to fetch data');
             }
@@ -123,7 +123,7 @@ export default function Main() {
     const filteredData = selectedCreator ? filteredByDate.filter(item => item.mode === selectedCreator) : filteredByDate;
 
     return (
-        <>
+        <div className='TransactionBody'>
             <div className='mainn'>
                 <Link to='/form'><button className='login' onClick={handleAddNewTransaction}>Add New Transaction</button></Link>
                 <Link to={`/overview/${userId}`}>
@@ -166,19 +166,7 @@ export default function Main() {
             {!showForm && <div className='ttables'>
                 <h2>Transactions</h2>
                 {data.length >= 0 ? (
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Date</th>
-                                <th>Amount</th>
-                                <th>Category</th>
-                                <th>Description</th>
-                                <th>Mode</th>
-                                <th>Actions</th>
-                                <th>Images</th>
-                            </tr>
-                        </thead>
+                    <table className='remainder-table'>
                         <tbody>
                             {filteredData.map(transaction => (
                                 transaction.user === userId ? (
@@ -213,6 +201,6 @@ export default function Main() {
                     <h2>No Data</h2>
                 )}
             </div>}
-        </>
+        </div>
     );
 }

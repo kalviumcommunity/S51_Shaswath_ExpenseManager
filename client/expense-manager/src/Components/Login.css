@@ -88,6 +88,14 @@ body {
   border: 0.125rem solid var(--primary-color);
 }
 
+
+#google, #googlee {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .form button {
   cursor: pointer;
   width: 100%;

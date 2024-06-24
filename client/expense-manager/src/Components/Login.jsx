@@ -37,11 +37,11 @@ const YourComponent = ({handleLogin}) => {
         })
         google.accounts.id.renderButton(
             document.getElementById("google"),
-            { theme: "outline", size: "large" }
+            { theme: "outline", size: "large", type: "standard", shape: "pill", text: "continue_with", logo_alignment: "left" }
         )
         google.accounts.id.renderButton(
             document.getElementById("googlee"),
-            { theme: "outline", size: "large" }
+            { theme: "outline", size: "large", type: "standard", shape: "pill", text: "continue_with", logo_alignment: "left" }
         )
     }, []);
 
