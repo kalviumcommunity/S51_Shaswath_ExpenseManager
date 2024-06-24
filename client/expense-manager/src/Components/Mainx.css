@@ -65,3 +65,29 @@ td::first-letter {
     min-width: 935px;
     /* border: 2px solid red; */
 }
+
+.pie-chart-container {
+    display: flex;
+    align-items: center;
+}
+
+.pie-chart-legend {
+    margin-left: 20px; /* Adjust the value as needed */
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.legend-label {
+    font-size: 14px;
+}

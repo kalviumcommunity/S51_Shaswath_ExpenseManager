@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart } from '@mui/x-charts';
+import { PieChart, pieArcLabelClasses } from '@mui/x-charts';
 import './Mainx.css';
 import Overview from './Overview';
 
@@ -10,6 +11,8 @@ function Mainx({ userId }) {
     const [data, setData] = useState([]);
     const [remdata, setRemdata] = useState([]);
     const [remindMe, setRemindMe] = useState(false);
+    const [highlightedItem, setHighLightedItem] = useState(null);
+
 
     useEffect(() => {
         if (remindMe) {
@@ -107,6 +110,22 @@ function Mainx({ userId }) {
 
     const colorData = data.transactions ? data.transactions.map(transaction => transaction.mode === "Credit" ? '#7fc97f' : '#e15759') : [];
 
+    const categoryData = data.transactions?.reduce((acc, transaction) => {
+        if (!acc[transaction.category]) {
+            acc[transaction.category] = 0;
+        }
+        acc[transaction.category] += transaction.amount;
+        return acc;
+    }, {});
+
+    const pieChartData = categoryData ? Object.entries(categoryData).map(([category, amount], index) => ({
+        id: index,
+        value: amount,
+        label: category
+    })) : [];
+
+
+
     return (
         <>
             <div className='mainx-body'>
@@ -125,7 +144,7 @@ function Mainx({ userId }) {
                                                 transaction.user === userId ? transaction.amount : null
                                         )
                                         : [],
-                                    color: colorData
+                                    color: colorData,
                                 }
                             ]}
                             height={300}
@@ -147,6 +166,34 @@ function Mainx({ userId }) {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+
+                    <div className="pie-chart-container">
+                        <PieChart
+                            series={
+                                [{
+                                    data: pieChartData,
+                                    innerRadius: 100,
+                                    outerRadius: 50,
+                                    paddingAngle: 5,
+                                    cornerRadius: 5,
+                                    startAngle: 0,
+                                    endAngle: 360,
+                                    cx: 100,
+                                    cy: 95,
+                                    highlightScope: { highlighted: 'item', faded: 'global' },
+                                }]}
+                            
+                            highlightedItem={highlightedItem}
+                            onHighlightChange={setHighLightedItem}
+                            width={400}
+                            height={200}
+                            slotProps={{
+                                legend: {
+                                    hidden: "True"
+                                }
+                            }}
+                        />
                     </div>
 
                     <div className='remainders-section'>
