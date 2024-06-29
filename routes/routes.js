@@ -295,10 +295,12 @@ geteachTransaction.get('/get/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const transaction = await User.findOne({ _id: id });
-        if (!transaction) {
+        const gtransaction = await GUser.findOne({_id: id})
+        if (!transaction || !gtransaction) {
             return res.status(404).json({ error: 'transaction not found' });
         }
         res.status(200).json(transaction);
+        res.status(200).json(gtransaction)
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Something went wrong' });
