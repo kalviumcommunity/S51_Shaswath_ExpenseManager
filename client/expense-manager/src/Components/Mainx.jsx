@@ -37,11 +37,12 @@ function Mainx({ userId }) {
     const fetchTransaction = async () => {
         try {
             const res = await fetch(`https://expensemanager-2t8j.onrender.com/get/${userId}`);
+            // const res = await fetch(`http://localhost:7777/get/${userId}`);
             if (!res.ok) {
                 throw new Error('Failed to fetch data');
             }
             const data = await res.json();
-            console.log(data);
+            console.log("recent transactions", data);
             setData(data);
         } catch (err) {
             console.log(err);

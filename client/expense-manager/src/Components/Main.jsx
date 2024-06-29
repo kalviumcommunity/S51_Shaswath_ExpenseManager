@@ -10,10 +10,10 @@ import './Main.css'
 
 
 
-export default function Main() {
+export default function Main({userId}) {
     const [showForm, setShowForm] = useState(false);
     const [data, setData] = useState([]);
-    const [userId, setUserId] = useState('');
+    // const [userId, setUserId] = useState('');
     const [viewMode, setViewMode] = useState('list');
     const [filter, setFilter] = useState([])
     const [selectedCreator, setSelectedCreator] = useState('');
@@ -24,8 +24,8 @@ export default function Main() {
 
     useEffect(() => {
         fetchTransaction();
-        const userId = getCookie("id");
-        setUserId(userId);
+        // const userId = getCookie("id");
+        // setUserId(userId);
     }, []);
 
     useEffect(() => {
@@ -34,17 +34,6 @@ export default function Main() {
 
     const handleCreatorChange = (e) => {
         setSelectedCreator(e.target.value);
-    };
-
-    const getCookie = (name) => {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [cookieName, cookieValue] = cookie.split('=');
-            if (cookieName.trim() === name) {
-                return decodeURIComponent(cookieValue);
-            }
-        }
-        return null;
     };
 
     const handleStartDateChange = (e) => {
@@ -64,6 +53,7 @@ export default function Main() {
             }
             const data = await res.json();
             console.log(data);
+            console.log(userId)
             setData(data);
         } catch (err) {
             console.log(err);
@@ -125,10 +115,6 @@ export default function Main() {
     return (
         <div className='TransactionBody'>
             <div className='mainn'>
-                <Link to='/form'><button className='login' onClick={handleAddNewTransaction}>Add New Transaction</button></Link>
-                <Link to={`/overview/${userId}`}>
-                    <button className='login'>Overview</button>
-                </Link>
 
 
 
@@ -171,6 +157,7 @@ export default function Main() {
                             {filteredData.map(transaction => (
                                 transaction.user === userId ? (
                                     <tr key={transaction._id}>
+                                        {/* <td>{transaction.user}</td> */}
                                         <td>{transaction.title}</td>
                                         <td>{new Date(transaction.date).toLocaleDateString()}</td>
                                         <td>{transaction.amount}</td>

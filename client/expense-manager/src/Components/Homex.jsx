@@ -149,7 +149,7 @@ function Homex({ isLoggedIn, handleLogout, userId }) {
                         {currentView === 'Remainders' && <Remainders userId={userId} />}
                         {currentView === 'AddR' && <AddRemainder userId={userId} />}
                         {currentView === 'AddT' && <TransactionForm/>}
-                        {currentView === 'Transaction' && <Main/>}
+                        {currentView === 'Transaction' && <Main userId={userId}/>}
                     </div>
                 </div>
             )}
