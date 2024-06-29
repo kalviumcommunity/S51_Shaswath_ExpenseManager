@@ -224,7 +224,7 @@ transactionRouter.post("/add", authenticateToken, upload.single('image'), async 
         });
 
         // Associate this transaction with the corresponding user and update the user's transactions array
-        const currentUser = await User.findById(user);
+        const currentUser = await User.findById(user) || await GUser.findById(user)
         if (!currentUser) {
             return res.status(404).json({ message: "User not found" });
         }
