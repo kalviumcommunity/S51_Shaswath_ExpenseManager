@@ -381,5 +381,31 @@ gusersRouter.post('/gusers', async (req, res) => {
     }
 });
 
+geteachTransaction.get('/gett/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        console.log(`Fetching transaction for user ID: ${id}`);
+
+        // Retrieve transaction from User model
+        const transaction = await Transaction.findOne({ _id: id });
+        console.log(`User model transaction: ${transaction}`);
+
+
+        // Check if transaction exists in either model
+        if (!transaction) {
+            return res.status(404).json({ error: 'Transaction not found' });
+        }
+
+        // Send the response
+        const response = transaction
+        return res.status(200).json(response);
+
+    } catch (err) {
+        console.error(`Error fetching transaction for user ID ${id}:`, err);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+});
+
 
 module.exports = { signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter, getRemainders, postRemainders }
