@@ -216,26 +216,43 @@ body {
 
 /* RESPONSIVE */
 
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 768px) {
+
+  /* #root{
+    overflow: hidden;
+  } */
+
+  .container{
+    overflow: hidden;
+  }
 
   .container::before,
   .container.sign-in::before,
   .container.sign-up::before {
-    height: 100vh;
+    height: 0vh;
     border-bottom-right-radius: 0;
     border-top-left-radius: 0;
     z-index: 0;
     transform: none;
-    right: 0;
+    right: 10;
+    width: 100%;
   }
 
   .container.sign-in .col.sign-up {
     transform: translateY(100%);
+    margin-bottom: -35px;
 }
 
-  .container.sign-in .col.sign-in,
-  .container.sign-up .col.sign-up {
+  .container.sign-in .col.sign-in {
     transform: translateY(0);
+    margin-bottom: 50px;
+    border-radius: 25px;
+  }
+
+  .container.sign-up .col.sign-up{
+    transform: translateY(0);
+    margin-bottom: 10px;
+    border-radius: 25px;
   }
 
   .content-row {
@@ -245,6 +262,11 @@ body {
   .content-row .col {
     transform: translateY(0);
     background-color: unset;
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: center;
   }
 
   .col {
@@ -256,11 +278,15 @@ body {
     border-top-right-radius: 2rem;
     transform: translateY(100%);
     transition: 1s ease-in-out;
+    margin-bottom: -30px;
   }
 
   .row {
     align-items: flex-end;
     justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+    margin-top: -30px;
   }
 
   .form,
@@ -279,7 +305,19 @@ body {
   }
 
   .text h2 {
-    margin: 0.5rem;
-    font-size: 2rem;
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+  }
+  .text.sign-up{
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .text.sign-in{
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .row .content-row{
+    margin: 100px;
   }
 }

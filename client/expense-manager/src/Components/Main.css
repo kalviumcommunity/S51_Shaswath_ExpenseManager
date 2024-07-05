@@ -162,3 +162,56 @@ th {
     align-items: center;
     justify-content: space-evenly;
 }
+
+.sorting{
+    display: flex;
+    justify-content: space-between;
+}
+
+.date-picker{
+    display: flex;
+    justify-content: space-evenly;
+    width: 50%;
+}
+
+.action-button {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#actions {
+    width: 100px;
+}
+
+/* General styling for the date input */
+#startDate, #endDate, .sort{
+
+    font-size: 12px;
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    outline: none;
+    font-weight: 600;
+}
+
+input[type="date"]:focus {
+    border-color: #66afe9;
+    box-shadow: 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+
+input[type="date"]::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+
+input[type="date"]:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+
