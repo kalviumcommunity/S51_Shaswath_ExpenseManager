@@ -122,7 +122,7 @@ const TransactionForm = () => {
 
         <div className="input-groupR">
           <label className="form-label">Description</label>
-          <input type="text" id="description" className="form-input" name="description" value={formData.description} onChange={handleChange} placeholder="Description" />
+          <input required type="text" id="description" className="form-input" name="description" value={formData.description} onChange={handleChange} placeholder="Description" />
         </div>
 
         <div className="input-groupR">

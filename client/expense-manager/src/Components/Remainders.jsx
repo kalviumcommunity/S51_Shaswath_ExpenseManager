@@ -162,10 +162,9 @@ function Remainders({ userId }) {
                         )}
                     </div>
 
-                    <button  onClick={() => setShowModal(true)}>Add Remainder</button>
-                </>
+                    </>
             ) : (
-                <div className="register">
+                <div className="editRem">
                     <h2 className="form-heading">{editIndex !== null ? 'Edit Reminder' : 'Add New Reminder'}</h2>
                     <form onSubmit={handleAddRemainder} className="form-container">
                         <div className="input-group">
