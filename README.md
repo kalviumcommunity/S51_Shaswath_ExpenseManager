@@ -19,4 +19,6 @@ Expense Manager is a web application designed to help users track their expenses
 - **Database**: MongoDB
 - **Authentication**: JSON Web Tokens (JWT)
 
+## Deployed Link : https://expensevault.pages.dev/
+
 ## DAY 1 : Setting up the project
