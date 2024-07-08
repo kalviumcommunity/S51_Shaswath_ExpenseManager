@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Verification = () => {
     const [message, setMessage] = useState('');
     const [verified, setVerified] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
@@ -26,6 +26,10 @@ const Verification = () => {
                 localStorage.setItem('token', data.token);
                 setVerified(true);
                 setMessage('Email verified successfully. You can continue to the application.');
+                // Automatically redirect after a delay
+                setTimeout(() => {
+                    navigate('/');
+                }, 3000); // 3-second delay
             } else {
                 setMessage(data.message);
             }
@@ -35,17 +39,12 @@ const Verification = () => {
         }
     };
 
-    const handleContinue = () => {
-        // Redirect to the dashboard or home page
-        history.push('/');
-    };
-
     return (
         <div>
             <h1>Email Verification</h1>
             <p>{message}</p>
             {verified && (
-                <button onClick={handleContinue}>Continue</button>
+                <button onClick={() => navigate('/')}>Continue</button>
             )}
         </div>
     );
