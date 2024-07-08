@@ -69,6 +69,7 @@ signUpRouter.post("/signup", async (req, res) => {
 });
 
 // Function to send verification email
+// Function to send verification email
 async function sendVerificationEmail(email, verificationToken, id, verified) {
     try {
         // Create transporter using nodemailer
@@ -81,8 +82,7 @@ async function sendVerificationEmail(email, verificationToken, id, verified) {
         });
 
         // Construct email message
-        const url = "https://expensevault.pages.dev/verification"
-        // const url = "http://localhost:5173/verification"
+        const url = `https://expensevault.pages.dev/verification?token=${verificationToken}`; // Include the token in the URL
 
         const mailOptions = {
             from: "shaswathgiridhran@gmail.com",
@@ -101,15 +101,36 @@ async function sendVerificationEmail(email, verificationToken, id, verified) {
     }
 }
 
+
+const JWT_SECRET = process.env.SECRET_KEY;
+
 getTransaction.get("/verification", async (req, res) => {
     try {
-        const user = await User.findOneAndUpdate({ verified: false }, { verified: true }, { new: true });
+        const { token } = req.query;
 
-        if (!user) {
-            return res.status(404).send({ message: "User not found" });
+        if (!token) {
+            return res.status(400).send({ message: "Invalid verification token" });
         }
 
-        res.status(200).send({ message: "Email verified successfully" });
+        const user = await User.findOneAndUpdate(
+            { verificationToken: token, verified: false },
+            { verified: true, verificationToken: null },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).send({ message: "User not found or already verified" });
+        }
+
+        // Generate JWT
+        const payload = { id: user._id, email: user.email };
+        const jwtToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+
+        res.status(200).send({
+            message: "Email verified successfully",
+            token: jwtToken,
+            user: user,
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Internal Server Error" });
