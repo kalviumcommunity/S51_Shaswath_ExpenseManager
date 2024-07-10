@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken')
 const multer = require('multer')
 const nodemailer = require('nodemailer')
 
+
 const signUpRouter = express.Router()
 const LoginRouter = express.Router()
 const LogoutRouter = express.Router()
@@ -69,7 +70,6 @@ signUpRouter.post("/signup", async (req, res) => {
 });
 
 // Function to send verification email
-// Function to send verification email
 async function sendVerificationEmail(email, verificationToken, id, verified) {
     try {
         // Create transporter using nodemailer
@@ -82,7 +82,8 @@ async function sendVerificationEmail(email, verificationToken, id, verified) {
         });
 
         // Construct email message
-        const url = `https://expensevault.pages.dev/verification?token=${verificationToken}`; // Include the token in the URL
+        const url = "https://expensevault.pages.dev/verification"
+        // const url = "http://localhost:5173/verification"
 
         const mailOptions = {
             from: "shaswathgiridhran@gmail.com",
@@ -101,36 +102,15 @@ async function sendVerificationEmail(email, verificationToken, id, verified) {
     }
 }
 
-
-const JWT_SECRET = process.env.SECRET_KEY;
-
 getTransaction.get("/verification", async (req, res) => {
     try {
-        const { token } = req.query;
-
-        if (!token) {
-            return res.status(400).send({ message: "Invalid verification token" });
-        }
-
-        const user = await User.findOneAndUpdate(
-            { verificationToken: token, verified: false },
-            { verified: true, verificationToken: null },
-            { new: true }
-        );
+        const user = await User.findOneAndUpdate({ verified: false }, { verified: true }, { new: true });
 
         if (!user) {
-            return res.status(404).send({ message: "User not found or already verified" });
+            return res.status(404).send({ message: "User not found" });
         }
 
-        // Generate JWT
-        const payload = { id: user._id, email: user.email };
-        const jwtToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
-
-        res.status(200).send({
-            message: "Email verified successfully",
-            token: jwtToken,
-            user: user,
-        });
+        res.status(200).send({ message: "Email verified successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Internal Server Error" });
@@ -427,6 +407,7 @@ geteachTransaction.get('/gett/:id', async (req, res) => {
         res.status(500).json({ error: 'Something went wrong' });
     }
 });
+
 
 
 module.exports = { signUpRouter, LoginRouter, LogoutRouter, transactionRouter, getTransaction, editTransaction, geteachTransaction, deleteTransaction, gusersRouter, getRemainders, postRemainders }

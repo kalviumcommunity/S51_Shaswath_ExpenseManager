@@ -189,7 +189,6 @@ body {
 .container::before {
   content: '';
   position: absolute;
-  bottom: 30px;
   right: 0;
   height: 100vh;
   width: 300vw;

@@ -20,6 +20,37 @@
     border-collapse: collapse;
 }
 
+.mainx-table, .mainx-tabler {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Adjust margin as needed */
+}
+
+.mainx-table tbody, .mainx-tabler tbody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.mainx-table tr, .mainx-tabler tr {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.mainx-table td, .mainx-tabler td {
+    flex: 2;
+    text-align: center;
+    padding: 8px;
+    /* border: 1px solid #ddd; */
+}
+
 td {
     padding: 15px;
     text-align: center;

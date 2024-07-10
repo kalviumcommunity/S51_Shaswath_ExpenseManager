@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import axios from 'axios';
 import './Remainders.css';
 
 function Remainders({ userId }) {
@@ -12,21 +13,24 @@ function Remainders({ userId }) {
         mode: ''
     });
     const [showModal, setShowModal] = useState(false);
-    const [editIndex, setEditIndex] = useState(null);
+    const [editRemainderId, setEditRemainderId] = useState(null);
 
     useEffect(() => {
         fetchRemainders();
     }, []);
 
     useEffect(() => {
-        if (editIndex !== null) {
-            const remainderToEdit = remainders[editIndex];
-            setFormData({
-                title: remainderToEdit.title,
-                date: remainderToEdit.date,
-                amount: remainderToEdit.amount,
-                mode: remainderToEdit.mode
-            });
+        if (editRemainderId !== null) {
+            const remainderToEdit = remainders.find(remainder => remainder._id === editRemainderId);
+            if (remainderToEdit) {
+                setFormData({
+                    title: remainderToEdit.title,
+                    date: remainderToEdit.date,
+                    amount: remainderToEdit.amount,
+                    mode: remainderToEdit.mode
+                });
+                setShowModal(true);
+            }
         } else {
             setFormData({
                 title: '',
@@ -34,12 +38,16 @@ function Remainders({ userId }) {
                 amount: '',
                 mode: ''
             });
+            setShowModal(false);
         }
-    }, [editIndex, remainders]);
+    }, [editRemainderId, remainders]);
 
     const fetchRemainders = async () => {
         try {
-            const response = await fetch('https://expensemanager-2t8j.onrender.com/getremainders');
+            const response = await fetch('http://localhost:7777/getremainders');
+            if (!response.ok) {
+                throw new Error('Failed to fetch remainders');
+            }
             const data = await response.json();
             setRemainders(data);
         } catch (error) {
@@ -52,134 +60,101 @@ function Remainders({ userId }) {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleAddRemainder = async event => {
+    const handleEditRemainder = id => {
+        setEditRemainderId(id);
+    };
+
+    const handleCloseModal = () => {
+        setEditRemainderId(null);
+    };
+
+    const handleUpdateRemainder = async event => {
         event.preventDefault();
         try {
-            if (editIndex !== null) {
-                const editedRemainder = remainders[editIndex];
-                const response = await fetch(`https://expensemanager-2t8j.onrender.com/patchremainders/${editedRemainder._id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    const updatedRemainders = [...remainders];
-                    updatedRemainders[editIndex] = data;
-                    setRemainders(updatedRemainders);
-                    alert('Remainder updated successfully');
-                } else {
-                    alert(data.error || 'Failed to update remainder');
-                }
+            const response = await axios.patch(`https://expensemanager-2t8j.onrender.com/patchremainders/${editRemainderId}`, formData);
+            if (response.status === 200) {
+                const updatedRemainders = remainders.map(remainder => 
+                    remainder._id === editRemainderId ? response.data : remainder
+                );
+                setRemainders(updatedRemainders);
+                alert('Remainder updated successfully');
             } else {
-                formData.user = userId;
-                const response = await fetch('https://expensemanager-2t8j.onrender.com/addremainders', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    alert(data.message);
-                    fetchRemainders();
-                } else {
-                    alert(data.error || 'Failed to add remainder');
-                }
+                throw new Error('Failed to update remainder');
             }
-
-            setFormData({
-                title: '',
-                date: '',
-                amount: '',
-                mode: ''
-            });
-            setShowModal(false);
         } catch (error) {
-            console.error('Error adding or updating remainder:', error);
+            console.error('Error updating remainder:', error);
+            alert(error.message || 'Failed to update remainder');
+        } finally {
+            handleCloseModal();
         }
     };
 
     const handleDeleteRemainder = async id => {
         try {
-            const response = await fetch(`https://expensemanager-2t8j.onrender.com/deleteremainders/${id}`, {
-                method: 'DELETE'
-            });
-            if (response.ok) {
+            const response = await axios.delete(`https://expensemanager-2t8j.onrender.com/deleteremainders/${id}`);
+            if (response.status === 200) {
                 setRemainders(remainders.filter(remainder => remainder._id !== id));
                 alert('Remainder deleted successfully');
             } else {
-                const data = await response.json();
-                alert(data.error || 'Failed to delete remainder');
+                throw new Error('Failed to delete remainder');
             }
         } catch (error) {
             console.error('Error deleting remainder:', error);
+            alert(error.message || 'Failed to delete remainder');
         }
-    };
-
-    const handleEditRemainder = index => {
-        const remainderToEdit = remainders[index];
-        setFormData({ ...remainderToEdit });
-        setShowModal(true);
-        setEditIndex(index);
-    };
-
-    const handleCloseModal = () => {
-        setShowModal(false);
-        setEditIndex(null);
     };
 
     return (
         <div className='remainder-body'>
-            {!showModal ? (
+            {!showModal && (
                 <>
-                <h1>Remainders</h1>
+                    <h1>Remainders</h1>
                     <div>
                         {remainders.filter(remainder => remainder.user === userId).length > 0 ? (
                             <table className='remainder-table'>
                                 <tbody>
-                                    {remainders.map((remainder, index) => (
-                                        remainder.user === userId && (
-                                            <tr key={index}>
+                                    {remainders
+                                        .filter(remainder => remainder.user === userId)
+                                        .sort((a, b) => new Date(a.date) - new Date(b.date)) // Sort by date ascending
+                                        .map(remainder => (
+                                            <tr key={remainder._id}>
                                                 <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.title}</td>
                                                 <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{new Date(remainder.date).toLocaleDateString()}</td>
                                                 <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.amount}</td>
                                                 <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.mode}</td>
-                                                <td>
-                                                    <EditIcon className="action-button" onClick={() => handleEditRemainder(index)} />
+                                                <td className={remainder.mode === "Credit" ? "credit" : "debit"}>
+                                                    <EditIcon className="action-button" onClick={() => handleEditRemainder(remainder._id)} />
                                                     <DeleteIcon className="action-button" onClick={() => handleDeleteRemainder(remainder._id)} />
                                                 </td>
                                             </tr>
-                                        )
-                                    ))}
+                                        ))
+                                    }
                                 </tbody>
                             </table>
                         ) : (
                             <p>No remainders</p>
                         )}
                     </div>
-
-                    </>
-            ) : (
+                </>
+            )}
+    
+            {showModal && (
                 <div className="editRem">
-                    <h2 className="form-heading">{editIndex !== null ? 'Edit Reminder' : 'Add New Reminder'}</h2>
-                    <form onSubmit={handleAddRemainder} className="form-container">
-                        <div className="input-group">
+                    <h2 className="form-heading">Edit Reminder</h2>
+                    <form onSubmit={handleUpdateRemainder} className="form-container">
+                        <div className="input-groupR">
                             <label htmlFor="title" className="form-label">Title:</label>
                             <input type="text" id="title" name="title" value={formData.title} onChange={handleInputChange} required className="form-input" />
                         </div>
-                        <div className="input-group">
+                        <div className="input-groupR">
                             <label htmlFor="date" className="form-label">Date:</label>
                             <input type="date" id="date" name="date" value={formData.date} onChange={handleInputChange} required className="form-input" />
                         </div>
-                        <div className="input-group">
+                        <div className="input-groupR">
                             <label htmlFor="amount" className="form-label">Amount:</label>
                             <input type="number" id="amount" name="amount" value={formData.amount} onChange={handleInputChange} required className="form-input" />
                         </div>
-                        <div className="input-group">
+                        <div className="input-groupR">
                             <label htmlFor="mode" className="form-label">Mode:</label>
                             <select name="mode" value={formData.mode} onChange={handleInputChange} required className="form-input">
                                 <option value="">Select Type</option>
@@ -187,7 +162,7 @@ function Remainders({ userId }) {
                                 <option value="Debit">Debit</option>
                             </select>
                         </div>
-                        <button type="submit" className="form-button">{editIndex !== null ? 'Save' : 'Add'}</button>
+                        <button type="submit" className="form-button">Save</button>
                         <button type="button" onClick={handleCloseModal} className="form-button">Close</button>
                     </form>
                 </div>

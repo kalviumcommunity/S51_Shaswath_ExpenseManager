@@ -85,22 +85,17 @@ function Homex({ isLoggedIn, handleLogout, userId }) {
                     <div className='features' ref={featureScrollRef}>
                         <div className='featureschild'>
                             <img className='featurescartoon' src={feature1} alt="feature1"></img>
-                            <br />
                             <h1 className='featurestext'>Track Every Penny</h1>
-                            <br />
-                            <br />
                             <p className='featurestextp'>Say goodbye to the hassle of managing receipts and scribbling down expenses on paper. With Expense Vault, you can easily log your expenses on-the-go, right from your smartphone or computer.</p>
                         </div>
                         <div className='featureschild'>
                             <img className='featurescartoon' src={feature2} alt="feature2"></img>
                             <h1 className='featurestext'>Organize Your Spending</h1>
-                            <br />
                             <p className='featurestextp'>Categorize your expenses with ease and precision. Expense Vault allows you to assign categories to your transactions, helping you understand where your money is going at a glance.</p>
                         </div>
                         <div className='featureschild'>
                             <img className='featurescartoon' src={feature3} alt="feature3"></img>
                             <h1 className='featurestext'>Gain Valuable Insights</h1>
-                            <br />
                             <p className='featurestextp'>Make informed decisions about your finances with powerful analytics tools. Expense Vault provides detailed reports and visualizations to help you understand your spending patterns over time.</p>
                         </div>
                     </div>
