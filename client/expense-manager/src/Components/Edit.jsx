@@ -1,151 +1,163 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import './TransactionForm.css';
 
-const TransactionForm = () => {
-    const [formData, setFormData] = useState({
-        title: '',
-        date: '',
-        amount: '',
-        category: '',
-        description: '',
-        mode: '',
-        image: null,
-    });
+export default function Edit({ id, onClose }) {
+    const [title, setTitle] = useState('');
+    const [date, setDate] = useState('');
+    const [amount, setAmount] = useState('');
+    const [category, setCategory] = useState('');
+    const [description, setDescription] = useState('');
+    const [mode, setMode] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
 
-    const getCookie = (name) => {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [cookieName, cookieValue] = cookie.split('=');
-            if (cookieName.trim() === name) {
-                return decodeURIComponent(cookieValue);
+    useEffect(() => {
+        const fetchTransactionData = async () => {
+            try {
+                const response = await axios.get(`https://expensemanager-2t8j.onrender.com/gett/${id}`);
+                if (response.status === 200) {
+                    const data = response.data;
+
+                    setTitle(data.title);
+                    setDate(data.date);
+                    setAmount(data.amount);
+                    setCategory(data.category);
+                    setDescription(data.description);
+                    setMode(data.mode);
+                } else {
+                    console.log("Failed to fetch data");
+                }
+            } catch (err) {
+                console.log("Error", err);
             }
-        }
-        return null;
-    };
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    const handleImageChange = (e) => {
-        setFormData({
-            ...formData,
-            image: e.target.files[0],
-        });
-    };
+        };
+        fetchTransactionData();
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token = getCookie('token');
-            const userId = getCookie('id');
-            formData.user = userId;
-
-            const formDataWithImage = new FormData();
-            for (const key in formData) {
-                formDataWithImage.append(key, formData[key]);
+            const formData = { title, date, amount, category, description, mode };
+            const response = await axios.patch(`https://expensemanager-2t8j.onrender.com/patch/${id}`, formData);
+            if (response.status === 200) {
+                console.log('Updated Transaction:', response.data);
+                onClose();
+            } else {
+                console.error('Update failed:', response.data.error);
             }
-
-            const response = await axios.post('https://expensemanager-2t8j.onrender.com/add', formDataWithImage, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            console.log('Transaction added successfully:', response.data.transaction);
-            setFormData({
-                title: '',
-                date: '',
-                amount: '',
-                category: '',
-                description: '',
-                mode: '',
-                image: null,
-            });
-            setError('');
-            alert('Transaction added successfully');
-            onClose();
-            window.location.reload();
-        } catch (error) {
-            console.error('Error submitting transaction:', error);
-            setError('Something went wrong. Please try again later.');
+        } catch (err) {
+            console.log(err);
         }
     };
 
-    const onClose = () => {
-        navigate('/');
-    };
-
     return (
-        <div className="registerT">
-            <h2 className="form-heading">Add Transaction</h2>
-            <form onSubmit={handleSubmit} className="form-container">
+        
+            <div className="registerT">
+                <form onSubmit={handleSubmit} className='form-container'>
+                    <div className='input-groupR'>
+                        <label className='form-label'>Title</label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            className='form-input'
+                            placeholder="Title"
+                            required
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </div>
+                    <div className="input-groupR">
+                        <label className="form-label">Date</label>
+                        <input
+                            type="date"
+                            id="date"
+                            name="date"
+                            placeholder="Date"
+                            required
+                            className="form-input"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                        />
+                    </div>
 
-                <div className="input-groupR">
-                    <label className="form-label">Title</label>
-                    <input type="text" id="title" name="title" placeholder="Title" className="form-input" required value={formData.title} onChange={handleChange} />
-                </div>
+                    <div className="input-groupR">
+                        <label className="form-label">Amount</label>
+                        <input
+                            type="number"
+                            id="amount"
+                            name="amount"
+                            className="form-input"
+                            placeholder="Amount"
+                            required
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                        />
+                    </div>
 
-                <div className="input-groupR">
-                    <label className="form-label">Date</label>
-                    <input type="date" id="date" name="date" placeholder="Date" required className="form-input" value={formData.date} onChange={handleChange} />
-                </div>
+                    <div className="input-groupR">
+                        <label className="form-label">Category</label>
+                        <select
+                            className="form-input"
+                            id="category"
+                            name="category"
+                            value={category}
+                            required
+                            onChange={(e) => setCategory(e.target.value)}
+                        >
+                            <option value="">Select category</option>
+                            <option value="Food">Food</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Rent">Rent</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Education">Education</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
 
-                <div className="input-groupR">
-                    <label className="form-label">Amount</label>
-                    <input type="number" id="amount" name="amount" className="form-input" placeholder="Amount" required value={formData.amount} onChange={handleChange} />
-                </div>
+                    <div className="input-groupR">
+                        <label className="form-label">Description</label>
+                        <input
+                            required
+                            type="text"
+                            id="description"
+                            className="form-input"
+                            name="description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Description"
+                        />
+                    </div>
 
-                <div className="input-groupR">
-                    <label className="form-label">Category</label>
-                    <select className="form-input" id="category" name="category" value={formData.category} required onChange={handleChange}>
-                        <option value="">Select category</option>
-                        <option value="Food">Food</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Rent">Rent</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Education">Education</option>
-                        <option value="Travel">Travel</option>
-                        <option value="Salary">Salary</option>
-                        <option value="Others">Others</option>
-                    </select>
-                </div>
+                    <div className="input-groupR">
+                        <label className="form-label">Type</label>
+                        <select
+                            className="form-input"
+                            id="mode"
+                            name="mode"
+                            value={mode}
+                            required
+                            onChange={(e) => setMode(e.target.value)}
+                        >
+                            <option value="">Select type</option>
+                            <option value="Credit">Credit</option>
+                            <option value="Debit">Debit</option>
+                        </select>
+                    </div>
 
-                <div className="input-groupR">
-                    <label className="form-label">Description</label>
-                    <input required type="text" id="description" className="form-input" name="description" value={formData.description} onChange={handleChange} placeholder="Description" />
-                </div>
+                    <button type="submit" className="form-button" id='button'>
+                        Submit
+                    </button>
+                    <button type="button" className="form-button" id='button' onClick={onClose}>
+                        Close
+                    </button>
+                    {error && <p className="error-message">{error}</p>}
+                </form>
+            </div>
 
-                <div className="input-groupR">
-                    <label className="form-label">Type</label>
-                    <select className="form-input" id="mode" name="mode" value={formData.mode} required onChange={handleChange}>
-                        <option value="">Select type</option>
-                        <option value="Credit">Credit</option>
-                        <option value="Debit">Debit</option>
-                    </select>
-                </div>
-
-                <div className="input-groupR">
-                    <label className="form-label">Image</label>
-                    <input className="form-input" type="file" id="image" name="image" onChange={handleImageChange} accept="image/*" />
-                </div>
-                <button type="submit" className="form-button" id='button'>Submit</button>
-                <button type="button" className="form-button" id='button' onClick={onClose}>Close</button>
-                {error && <p className="error-message">{error}</p>}
-            </form>
-        </div>
     );
-};
-
-export default TransactionForm;
+}
