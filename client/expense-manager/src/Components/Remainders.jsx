@@ -44,7 +44,7 @@ function Remainders({ userId }) {
 
     const fetchRemainders = async () => {
         try {
-            const response = await fetch('http://localhost:7777/getremainders');
+            const response = await fetch('https://expensemanager-2t8j.onrender.com/getremainders');
             if (!response.ok) {
                 throw new Error('Failed to fetch remainders');
             }
