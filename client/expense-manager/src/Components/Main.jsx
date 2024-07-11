@@ -134,71 +134,71 @@ const Main = ({ userId }) => {
             <h2>Transactions</h2>
             <br />
             {isEditing ? (
-                    <div className="editRem">
-                        <form onSubmit={handleSubmit} className='form-container'>
-                            <div className='input-groupR'>
-                                <label className='form-label'>Title</label>
-                                <input type="text"
-                                    id="title"
-                                    name="title"
-                                    className='form-input'
-                                    placeholder="Title"
-                                    required
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)} />
-                            </div>
-                            <div className="input-groupR">
-                                <label className="form-label">Date</label>
-                                <input type="date" id="date" name="date" placeholder="Date" required className="form-input" value={date} onChange={(e) => setDate(e.target.value)} />
-                            </div>
+                <div className="editRem">
+                    <form onSubmit={handleSubmit} className='form-container'>
+                        <div className='input-groupR'>
+                            <label className='form-label'>Title</label>
+                            <input type="text"
+                                id="title"
+                                name="title"
+                                className='form-input'
+                                placeholder="Title"
+                                required
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)} />
+                        </div>
+                        <div className="input-groupR">
+                            <label className="form-label">Date</label>
+                            <input type="date" id="date" name="date" placeholder="Date" required className="form-input" value={date} onChange={(e) => setDate(e.target.value)} />
+                        </div>
 
-                            <div className="input-groupR">
-                                <label className="form-label">Amount</label>
-                                <input type="number" id="amount" name="amount" className="form-input" placeholder="Amount" required value={amount} onChange={(e) => setAmount(e.target.value)} />
-                            </div>
+                        <div className="input-groupR">
+                            <label className="form-label">Amount</label>
+                            <input type="number" id="amount" name="amount" className="form-input" placeholder="Amount" required value={amount} onChange={(e) => setAmount(e.target.value)} />
+                        </div>
 
-                            <div className="input-groupR">
-                                <label className="form-label">Category</label>
-                                <select className="form-input" id="category" name="category" value={category} required onChange={(e) => setCategory(e.target.value)}
-                                >
-                                    <option value="">Select category</option>
-                                    <option value="Food">Food</option>
-                                    <option value="Transportation">Transportation</option>
-                                    <option value="Shopping">Shopping</option>
-                                    <option value="Utilities">Utilities</option>
-                                    <option value="Rent">Rent</option>
-                                    <option value="Healthcare">Healthcare</option>
-                                    <option value="Entertainment">Entertainment</option>
-                                    <option value="Education">Education</option>
-                                    <option value="Travel">Travel</option>
-                                    <option value="Salary">Salary</option>
-                                    <option value="Others">Others</option>
-                                </select>
-                            </div>
+                        <div className="input-groupR">
+                            <label className="form-label">Category</label>
+                            <select className="form-input" id="category" name="category" value={category} required onChange={(e) => setCategory(e.target.value)}
+                            >
+                                <option value="">Select category</option>
+                                <option value="Food">Food</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Rent">Rent</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Education">Education</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Salary">Salary</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
 
-                            <div className="input-groupR">
-                                <label className="form-label">Description</label>
-                                <input required type="text" id="description" className="form-input" name="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
-                            </div>
+                        <div className="input-groupR">
+                            <label className="form-label">Description</label>
+                            <input required type="text" id="description" className="form-input" name="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
+                        </div>
 
-                            <div className="input-groupR">
-                                <label className="form-label">Type</label>
-                                <select className="form-input" id="mode" name="mode" value={mode} required onChange={(e) => setMode(e.target.value)}>
-                                    <option value="">Select type</option>
-                                    <option value="Credit">Credit</option>
-                                    <option value="Debit">Debit</option>
-                                </select>
-                            </div>
+                        <div className="input-groupR">
+                            <label className="form-label">Type</label>
+                            <select className="form-input" id="mode" name="mode" value={mode} required onChange={(e) => setMode(e.target.value)}>
+                                <option value="">Select type</option>
+                                <option value="Credit">Credit</option>
+                                <option value="Debit">Debit</option>
+                            </select>
+                        </div>
 
-                            <button type="submit" className="form-button" id='button'>
-                                Submit
-                            </button>
-                            <button type="button" className="form-button" id='button' onClick={handleCloseEdit}>
-                                Close
-                            </button>
-                            {error && <p className="error-message">{error}</p>}
-                        </form>
-                    </div>
+                        <button type="submit" className="form-button" id='button'>
+                            Submit
+                        </button>
+                        <button type="button" className="form-button" id='button' onClick={handleCloseEdit}>
+                            Close
+                        </button>
+                        {error && <p className="error-message">{error}</p>}
+                    </form>
+                </div>
             ) : (
                 <>
                     <div className='sorting'>
@@ -222,28 +222,33 @@ const Main = ({ userId }) => {
                         </div>
                     </div>
                     <div className='ttables'>
-                        {data.length > 0 ? (
-                            <table className='remainder-table'>
-                                <tbody>
-                                    {filteredData.map(transaction => (
-                                        <tr key={transaction._id}>
-                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{new Date(transaction.date).toLocaleDateString()}</td>
-                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.title}</td>
-                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.amount}</td>
-                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.category}</td>
-                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.description}</td>
-                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.mode}</td>
-                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"} id='actions'>
-                                                <EditIcon className="action-button" onClick={() => handleEditClick(transaction._id)} />
-                                                <DeleteIcon className="action-button" onClick={() => handleDelete(transaction._id)} />
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <h2>No Data</h2>
-                        )}
+                        <table className='remainder-table'>
+                            <tbody>
+                                {filteredData.filter(transaction => transaction.user === userId).length > 0 ? (
+                                    filteredData
+                                        .filter(transaction => transaction.user === userId)
+                                        .map(transaction => (
+                                            <tr key={transaction._id}>
+                                                <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{new Date(transaction.date).toLocaleDateString()}</td>
+                                                <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.title}</td>
+                                                <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.amount}</td>
+                                                <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.category}</td>
+                                                <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.description}</td>
+                                                <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.mode}</td>
+                                                <td className={transaction.mode === "Credit" ? "credit" : "debit"} id='actions'>
+                                                    <EditIcon className="action-button" onClick={() => handleEditClick(transaction._id)} />
+                                                    <DeleteIcon className="action-button" onClick={() => handleDelete(transaction._id)} />
+                                                </td>
+                                            </tr>
+                                        ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="7"><b>No transactions available. Please add your transactions to see them here.</b></td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+
                     </div>
                 </>
             )}

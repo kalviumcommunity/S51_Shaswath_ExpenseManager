@@ -88,28 +88,28 @@ function Mainx({ userId }) {
             throw error;
         }
     };
-    
+
     const expiredReminders = remdata.filter(reminder => {
         const reminderDate = moment(reminder.date, "YYYY-MM-DD").startOf('day');
         return reminderDate.isBefore(today);
     });
-    
+
     console.log("expiredReminders", expiredReminders);
-    
+
     if (expiredReminders.length > 0) {
         expiredReminders.forEach(reminder => {
             deleteOverdueReminder(reminder._id);
         });
     }
-    
-    
+
+
 
     const xLabels = data.transactions?.map(transaction => {
         const date = new Date(transaction.date);
         return `${date.getDate()}/${date.getMonth() + 1}`;
     }) || [];
 
-    const colorData = data.transactions ? data.transactions.map(transaction => transaction.mode === "Credit" ? '#7fc97f' : '#e15759') : [];
+    const colorData = data.transactions ? data.transactions.map(transaction => transaction.mode === "Credit" ?  '#e15759' : '#7fc97f') : [];
 
     const categoryData = data.transactions?.reduce((acc, transaction) => {
         if (!acc[transaction.category]) {
@@ -130,7 +130,7 @@ function Mainx({ userId }) {
             <div className='mainx-body'>
                 <ToastContainer />
                 <div className='overview-section'><Overview userId={userId} /></div>
-                <br />                  
+                <br />
                 <br />
                 <div className='mainx-content'>
                     <div className='charts-section'>
@@ -154,18 +154,30 @@ function Mainx({ userId }) {
 
                     <div className='recent-section'>
                         <h3 className='recent'>RECENT TRANSACTIONS</h3>
-                        <table className='mainx-table'>
-                            <tbody>
-                                {data.transactions && data.transactions.slice(-5).map(transaction => (
-                                    <tr key={transaction._id}>
-                                        <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{new Date(transaction.date).toLocaleDateString()}</td>
-                                        <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.title}</td>
-                                        <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.amount}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        {data.transactions && data.transactions.length > 0 ? (
+                            <table className='mainx-table'>
+                                <tbody>
+                                    {data.transactions.slice(-5).map(transaction => (
+                                        <tr key={transaction._id}>
+                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{new Date(transaction.date).toLocaleDateString()}</td>
+                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.title}</td>
+                                            <td className={transaction.mode === "Credit" ? "credit" : "debit"}>{transaction.amount}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <>
+                                <br />
+                                <br />
+                                <br />
+
+                                <h4>No reminders available. Please add your reminders to see them here.</h4>
+
+                            </>
+                        )}
                     </div>
+
 
                     <div className="pie-chart-container">
                         <PieChart
@@ -195,23 +207,35 @@ function Mainx({ userId }) {
                     </div>
 
                     <div className='remainders-section'>
-                        <h3>RECENT REMAINDERS</h3>
-                        <table className='mainx-tabler'>
-                            <tbody>
-                                {remdata
-                                    .filter(remainder => remainder.user === userId)
-                                    .sort((a, b) => new Date(a.date) - new Date(b.date))
-                                    .slice(0, 4)
-                                    .map(remainder => (
-                                        <tr key={remainder._id}>
-                                            <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{new Date(remainder.date).toLocaleDateString()}</td>
-                                            <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.title}</td>
-                                            <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.amount}</td>
-                                        </tr>
-                                    ))}
-                            </tbody>
-                        </table>
+                        <h3>RECENT REMINDERS</h3>
+                        {remdata && remdata.filter(remainder => remainder.user === userId).length > 0 ? (
+                            <table className='mainx-tabler'>
+                                <tbody>
+                                    {remdata
+                                        .filter(remainder => remainder.user === userId)
+                                        .sort((a, b) => new Date(a.date) - new Date(b.date))
+                                        .slice(0, 4)
+                                        .map(remainder => (
+                                            <tr key={remainder._id}>
+                                                <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{new Date(remainder.date).toLocaleDateString()}</td>
+                                                <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.title}</td>
+                                                <td className={remainder.mode === "Credit" ? "credit" : "debit"}>{remainder.amount}</td>
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <>
+                                <br />
+                                <br />
+                                <br />
+
+                                <h4>No reminders available. Please add your reminders to see them here.</h4>
+
+                            </>
+                        )}
                     </div>
+
                 </div>
             </div>
         </>
