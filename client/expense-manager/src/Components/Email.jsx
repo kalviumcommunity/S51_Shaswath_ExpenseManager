@@ -4,7 +4,8 @@ import {Link} from 'react-router-dom'
 
 
 function Email() {
-    
+    document.body.classList.add('bodyh');
+
 
     useEffect(() => {
         verifyEmail()
@@ -24,10 +25,12 @@ function Email() {
     
 
     return (
-        <>
+        <div className='parent-container'>
+        <div>
             <h1>Email verified </h1>
-            <Link to='/'><button>Click to continue</button></Link>
-        </>
+            <Link to='/'><button className='form-button'>Click to continue</button></Link>
+        </div>
+        </div>
     )
 }
 
