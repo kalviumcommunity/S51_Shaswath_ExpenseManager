@@ -132,7 +132,13 @@ function Remainders({ userId }) {
                                 </tbody>
                             </table>
                         ) : (
-                            <p>No remainders</p>
+                            <>
+                                <br/>
+                                <br/>
+
+                                <b>No remainders available. Please add your remainders to see them here.</b>
+
+                            </>
                         )}
                     </div>
                 </>
