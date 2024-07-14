@@ -89,7 +89,7 @@ const YourComponent = ({ handleLogin }) => {
                     navigate('/');
                 }
             } else {
-                const response = await axios.post('https://expensemanager-2t8j.onrender.com/signup', {
+                const response = await axios.post('http://expensemanager-2t8j.onrender.com/signup', {
                     name: signupName,
                     username: signupUsername,
                     email: signupEmail,

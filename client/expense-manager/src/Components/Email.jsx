@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 
 
-function Email() {
+function Email({handleLoginL}) {
     document.body.classList.add('bodyh');
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -16,7 +17,12 @@ function Email() {
             // const url = "http://localhost:7777/verification"
             const url = "https://expensemanager-2t8j.onrender.com/verification"
             const { data } = await axios.get(url)
+            const { token, user } = data;
             console.log(data)
+            localStorage.setItem('token', token);
+            handleLoginL()
+
+            // navigate('/')
 
         } catch (err) { // Fix the syntax error here
             console.log(err)
