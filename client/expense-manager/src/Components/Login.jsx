@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import './Login.css'
+import './Login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode as jwt_decode } from 'jwt-decode';
-// import image from '../assets/logo.png'
+import {jwtDecode as jwt_decode} from 'jwt-decode';
+import { ClipLoader } from 'react-spinners'; 
 
-const YourComponent = ({handleLogin}) => {
+const YourComponent = ({ handleLogin }) => {
     const [isSignIn, setIsSignIn] = useState(true);
-    const [mode, setMode] = useState('signup'); // Default mode is signup
+    const [loading, setLoading] = useState(false);
 
     // State variables for login
     const [loginUsername, setLoginUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [loginError, setLoginError] = useState('');
+    const [googleError, setGoogleError] = useState('');
 
     // State variables for signup
     const [signupName, setSignupName] = useState('');
@@ -34,15 +35,15 @@ const YourComponent = ({handleLogin}) => {
         google.accounts.id.initialize({
             client_id: "358374114106-pe56que7nt4q3n1o7up00nhgbrdpcnv5.apps.googleusercontent.com",
             callback: handleCallBackResponse
-        })
+        });
         google.accounts.id.renderButton(
             document.getElementById("google"),
             { theme: "outline", size: "large", type: "standard", shape: "pill", text: "continue_with", logo_alignment: "left" }
-        )
+        );
         google.accounts.id.renderButton(
             document.getElementById("googlee"),
             { theme: "outline", size: "large", type: "standard", shape: "pill", text: "continue_with", logo_alignment: "left" }
-        )
+        );
     }, []);
 
     const handleUsernameChange = (e) => {
@@ -71,22 +72,21 @@ const YourComponent = ({handleLogin}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoginError('');
+        setSignupError('');
+        setLoading(true); // Set loading to true
         try {
             if (isSignIn) {
                 const response = await axios.post('https://expensemanager-2t8j.onrender.com/login', {
                     username: loginUsername,
                     password: loginPassword
                 });
-                document.cookie = `id=${response.data.user._id}`;
                 if (response.status === 200) {
                     const { token } = response.data;
                     document.cookie = `token=${token}; path=/;`;
                     document.cookie = `id=${response.data.user._id}`;
                     handleLogin();
                     navigate('/');
-                } else {
-                    const errorData = response.data;
-                    setLoginError(errorData.error);
                 }
             } else {
                 const response = await axios.post('https://expensemanager-2t8j.onrender.com/signup', {
@@ -97,36 +97,44 @@ const YourComponent = ({handleLogin}) => {
                 });
                 if (response.status === 200) {
                     navigate('/verifi');
-                    const { token } = response.data;
-                    document.cookie = `token=${token}; path=/;`;
-                    document.cookie = `id=${response.data.user._id}`;
                     alert('Signup successful! Please login.');
-                    handleLogin();
+                    setIsSignIn(true); // Switch to sign-in form after successful signup
                 }
             }
         } catch (error) {
             console.error('Error:', error);
-            if (mode === 'login') {
-                setLoginError('Something went wrong. Please try again later.');
+            if (error.response && error.response.data && error.response.data.Message) {
+                if (isSignIn) {
+                    setLoginError(error.response.data.Message);
+                } else {
+                    setSignupError(error.response.data.Message);
+                }
             } else {
-                setSignupError('Something went wrong. Please try again later.');
+                if (isSignIn) {
+                    setLoginError('Something went wrong. Please try again later.');
+                } else {
+                    setSignupError('Something went wrong. Please try again later.');
+                }
             }
+        } finally {
+            setLoading(false); // Set loading to false after request completes
         }
     };
 
     function handleCallBackResponse(response) {
-        console.log("encoded", response.credential)
-        const userObj = jwt_decode(response.credential)
-        console.log(userObj)
+        console.log("encoded", response.credential);
+        const userObj = jwt_decode(response.credential);
+        console.log(userObj);
 
         // Send userObj to backend along with JWT token
         sendUserDataToBackend(userObj);
     }
 
-    async function sendUserDataToBackend(userData) {
+    const sendUserDataToBackend = async (userData) => {
+        setLoading(true); // Set loading to true
         try {
             const response = await axios.post('https://expensemanager-2t8j.onrender.com/gusers', userData);
-            console.log('User data sent to backend:', response.data);
+            // console.log('User data sent to backend:', response.data);
 
             // Save JWT token locally
             const { token, user } = response.data;
@@ -136,22 +144,16 @@ const YourComponent = ({handleLogin}) => {
             handleLogin();
             navigate('/');
         } catch (error) {
-            console.error('Error sending user data to backend:', error);
-            // Handle error
+            // console.error('Error sending user data to backend:', error);
+            setGoogleError(error.response?.data?.message || 'An error occurred while sending user data to the backend');
+        } finally {
+            setLoading(false); // Set loading to false after request completes
         }
-    }
-
-    useEffect(() => {
-        setTimeout(() => {
-            setIsSignIn(true);
-        }, 200);
-    }, []);
+    };
 
     const toggle = () => {
         setIsSignIn(!isSignIn);
     };
-    
-
 
     return (
         <div id="container" className={`container ${isSignIn ? 'sign-in' : 'sign-up'}`}>
@@ -167,7 +169,7 @@ const YourComponent = ({handleLogin}) => {
                             </div>
                             <div className="input-group">
                                 <i className="bx bx-mail-send"></i>
-                                <input   value={signupUsername} onChange={handleUsernameChange} type="text" placeholder="UserName" />
+                                <input value={signupUsername} onChange={handleUsernameChange} type="text" placeholder="UserName" />
                             </div>
                             <div className="input-group">
                                 <i className="bx bxs-lock-alt"></i>
@@ -178,8 +180,11 @@ const YourComponent = ({handleLogin}) => {
                                 <input value={signupPassword} onChange={handlePasswordChange} type="password" placeholder="Password" />
                             </div>
                             {signupError && <p className="error-message">{signupError}</p>}
-                            <button onClick={handleSubmit}>Sign up</button>
+                            <button onClick={handleSubmit} disabled={loading}>
+                                {loading ? <ClipLoader size={24} color="#fff" /> : 'Sign up'}
+                            </button>
                             <div id='googlee'></div>
+                            {googleError && <p className='error-message'>{googleError}</p>}
                             <p>
                                 <span> Already have an account? </span>
                                 <b onClick={toggle} className="pointer"> Sign in here </b>
@@ -200,12 +205,13 @@ const YourComponent = ({handleLogin}) => {
                                 <i className="bx bxs-lock-alt"></i>
                                 <input value={loginPassword} onChange={handlePasswordChange} type="password" placeholder="Password" />
                             </div>
-                            <button onClick={handleSubmit}>Sign in</button>
-                            <p>
-                                <b> Forgot password? </b>
-                            </p>
-                            <div id='google'></div>
                             {loginError && <p className="error-message">{loginError}</p>}
+                            <button onClick={handleSubmit} disabled={loading}>
+                                {loading ? <ClipLoader size={24} color="#fff" /> : 'Sign in'}
+                            </button>
+                            <div id='google'></div>
+                            {googleError && <p className='error-message'>{googleError}</p>}
+
                             <p>
                                 <span> Don't have an account? </span>
                                 <b onClick={toggle} className="pointer"> Sign up here </b>
