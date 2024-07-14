@@ -104,18 +104,42 @@ async function sendVerificationEmail(email, verificationToken, id, verified) {
 
 getTransaction.get("/verification", async (req, res) => {
     try {
-        const user = await User.findOneAndUpdate({ verified: false }, { verified: true }, { new: true });
-
-        if (!user) {
-            return res.status(404).send({ message: "User not found" });
+        const token = req.query.token;
+        if (!token) {
+            return res.status(400).send({ message: "Invalid or missing token" });
         }
 
-        res.status(200).send({ message: "Email verified successfully" });
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const user = await User.findOneAndUpdate(
+            { verificationToken: token, verified: false },
+            { verified: true, verificationToken: null },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).send({ message: "User not found or already verified" });
+        }
+
+        // Generate a new token for authentication
+        const authToken = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: "1d",
+            }
+        );
+
+        res.status(200).send({
+            message: "Email verified successfully",
+            token: authToken,
+            user: user
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Internal Server Error" });
     }
 });
+
 
 LoginRouter.post('/login', async (req, res) => {
     try {
