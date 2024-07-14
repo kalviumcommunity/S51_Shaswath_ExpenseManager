@@ -73,7 +73,7 @@ const TransactionForm = () => {
       setError('');
       alert('Transaction added successfully');
       onClose();
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error('Error submitting transaction:', error);
       setError('Something went wrong. Please try again later.');
