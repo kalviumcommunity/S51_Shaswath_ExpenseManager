@@ -312,7 +312,7 @@ editTransaction.patch("/patch/:id", async (req, res) => {
 // Getting each transaction
 geteachTransaction.get('/get/:id', async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.params; // Destructure id from req.params
 
         console.log(`Fetching transaction for user ID: ${id}`);
 
@@ -320,8 +320,8 @@ geteachTransaction.get('/get/:id', async (req, res) => {
         const transaction = await User.findOne({ _id: id });
         console.log(`User model transaction: ${transaction}`);
 
-        // Retrieve transaction from GUser model
-        const gtransaction = await GUser.findOne({ _id: id });
+        // Retrieve transaction from GUser model if not found in User model
+        const gtransaction = transaction || await GUser.findOne({ _id: id });
         console.log(`GUser model transaction: ${gtransaction}`);
 
         // Check if transaction exists in either model
@@ -330,14 +330,15 @@ geteachTransaction.get('/get/:id', async (req, res) => {
         }
 
         // Send the response
-        const response = transaction ? transaction : gtransaction;
+        const response = transaction || gtransaction;
         return res.status(200).json(response);
 
     } catch (err) {
-        console.error(`Error fetching transaction for user ID ${id}:`, err);
+        console.error(`Error fetching transaction for user ID ${req.params.id}:`, err); // Use req.params.id here
         res.status(500).json({ error: 'Something went wrong' });
     }
 });
+
 
 deleteTransaction.delete('/deleteremainders/:id', async (req, res) => {
     try {
