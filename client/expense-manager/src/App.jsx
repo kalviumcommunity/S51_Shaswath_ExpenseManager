@@ -24,6 +24,7 @@ function App() {
 
   useEffect(() => {
     handleLogin();
+    handleLoginL();
   }, []);
 
   const getCookie = (name) => {
@@ -31,6 +32,14 @@ function App() {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
   };
+
+  const handleLoginL = () => {
+    const token = localStorage.getItem('token');
+    console.log("Token", token);
+    setIsLoggedIn(!!token);
+    setUserId(token ? localStorage.getItem('id') : ''); // Set userId if logged in
+};
+
 
   const handleLogin = () => {
     const token = getCookie('token');
@@ -56,7 +65,7 @@ function App() {
           {/* <Route path='/overview/:userId' element={<Overview userId={userId}/>} /> */}
           <Route path='/form' element={<TransactionForm/>} />
           <Route path='/images' element={<Image userId={userId} />} />
-          <Route path='/verification' element={<Email />} />
+          <Route path='/verification' element={<Email handleLoginL={handleLoginL} />} />
           <Route path='/verifi' element={<Verifi />} />
           <Route path='/rem' element={<Remainders userId={userId} />}></Route>
         </Routes>
