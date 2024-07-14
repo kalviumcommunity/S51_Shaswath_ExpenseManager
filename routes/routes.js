@@ -82,7 +82,7 @@ async function sendVerificationEmail(email, verificationToken, id, verified) {
         });
 
         // Construct email message
-        const url = "https://expensevault.pages.dev/verification"
+        const url = `https://expensevault.pages.dev/verification?token=${verificationToken}`
         // const url = "http://localhost:5173/verification"
 
         const mailOptions = {
