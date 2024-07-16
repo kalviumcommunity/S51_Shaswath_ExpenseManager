@@ -69,6 +69,13 @@ const Main = ({ userId }) => {
         }
     };
 
+    const handleImageChange = (e) => {
+        setFormData({
+          ...formData,
+          image: e.target.files[0], // Update image state with the selected file
+        });
+      };
+
     const extractUniqueCreators = () => {
         const filter = [...new Set(data.map(item => item.mode))];
         setFilter(filter);
@@ -188,6 +195,10 @@ const Main = ({ userId }) => {
                                 <option value="Credit">Credit</option>
                                 <option value="Debit">Debit</option>
                             </select>
+                        </div>
+                        <div className="input-groupR">
+                            <label className="form-label">Image</label>
+                            <input className="form-input" type="file" id="image" name="image" onChange={handleImageChange} accept="image/*" />
                         </div>
 
                         <button type="submit" className="form-button" id='button'>

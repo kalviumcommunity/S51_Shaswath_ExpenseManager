@@ -25,14 +25,15 @@ export default function Image({ userId }) {
         cursor: 'pointer'
     };
     const heading = {
-        color: 'rgb(51, 186, 240)'
+        color: '#000'
     }
 
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div className='registerT'>
+            <div style={{ padding: '20px' }}>
             <h2 style={heading}>Images</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
                 {data.map((image) => (
                     userId === image.user ? (
                         <img
@@ -44,6 +45,7 @@ export default function Image({ userId }) {
                     ) : null
                 ))}
             </div>
+        </div>
         </div>
     );
 }

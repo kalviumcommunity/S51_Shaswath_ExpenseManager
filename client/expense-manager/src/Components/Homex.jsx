@@ -17,6 +17,7 @@ import Overview from './Overview';
     
 
 import { FacebookOutlined, Twitter, Instagram } from '@mui/icons-material';
+import Image from './Image';
 
 function Homex({ isLoggedIn, handleLogout, userId }) {
     const [currentView, setCurrentView] = useState('Mainx');  // State to track the current view
@@ -137,6 +138,7 @@ function Homex({ isLoggedIn, handleLogout, userId }) {
                         <button className='navbtn' onClick={() => setCurrentView('AddR')}>Add Remainder</button>
                         <button className='navbtn' onClick={() => setCurrentView('Remainders')}>Remainders</button>
                         <button className='navbtn' onClick={() => setCurrentView('Transaction')}>Transactions</button>
+                        <button className='navbtn' onClick={() => setCurrentView('Images')}>Images</button>
                         <button onClick={handleLogout} className='navbtn'>Logout</button>
                     </nav>
                     <div className='second'>
@@ -145,6 +147,7 @@ function Homex({ isLoggedIn, handleLogout, userId }) {
                         {currentView === 'AddR' && <AddRemainder userId={userId} />}
                         {currentView === 'AddT' && <TransactionForm userId={userId}/>}
                         {currentView === 'Transaction' && <Main userId={userId}/>}
+                        {currentView === 'Images' && <Image userId={userId}/>}
                     </div>
                 </div>
             )}
