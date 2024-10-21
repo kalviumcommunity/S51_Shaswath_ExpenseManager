@@ -145,9 +145,9 @@ LoginRouter.post('/login', async (req, res) => {
         }
 
         // Check if the user is verified
-        if (!user.verified) {
-            return res.status(400).json({ Message: "User is not verified" });
-        }
+        // if (!user.verified) {
+        //     return res.status(400).json({ Message: "User is not verified" });
+        // }
 
         const passwordCheck = await bcrypt.compare(password, user.password);
         if (!passwordCheck) {
@@ -212,7 +212,7 @@ postRemainders.post("/addremainders", async (req, res) => {
 
 const upload = multer();
 
-transactionRouter.post("/add", authenticateToken, upload.single('image'), async (req, res) => {
+transactionRouter.post("/add", upload.single('image'), async (req, res) => {
     try {
         const { title, date, amount, category, description, mode, user } = req.body;
 
